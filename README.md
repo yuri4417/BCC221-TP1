@@ -23,6 +23,11 @@ Projeto desenvolvido em C++ para simular um sistema bancário com clientes, gere
 
 ## ▶️ Como executar
 
-### Compilar:
+### Compilação:
 ```bash
-g++ main.cpp Cliente.cpp Gerente.cpp menu.cpp Pessoa.cpp Transacao.cpp -o programa
+make
+```
+### Executar Programa:
+```bash
+make run
+```
