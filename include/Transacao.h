@@ -28,7 +28,7 @@ public:
     void setValor(double);
     void setData(std::string);
     void setHorario(std::string);
-    void setClientes(Cliente);
+    void setClientes(Cliente* c);
     //exibir
     void exibirTransacao();
 };

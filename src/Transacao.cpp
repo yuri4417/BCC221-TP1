@@ -11,25 +11,11 @@ Transacao::Transacao(string t, double v, string d, string h):
 //------------------------------------
 //getters
 
-string Transacao::getTipo() const {
-    return tipo;
-}
-    
-double Transacao::getValor() const {
-    return valor;
-}
-    
-string Transacao::getData() const {
-    return data;
-}
-
-string Transacao::getHorario() const {
-    return horario;
-}
-
-const vector<Cliente*> Transacao::getClientes() const {
-    return clientesEnvolvidos;
-}
+string Transacao::getTipo()                      const { return tipo; } 
+double Transacao::getValor()                     const { return valor; } 
+string Transacao::getData()                      const { return data; }
+string Transacao::getHorario()                   const { return horario; }
+const vector<Cliente*>& Transacao::getClientes() const { return clientesEnvolvidos; }
 
 //------------------------------------
 //setters
@@ -50,7 +36,7 @@ void Transacao :: setHorario(string h){
     horario = h; 
 }
 
-void Transacao :: setClientes(vector<Cliente*> c){
+void Transacao :: setClientes(Cliente* c){
     clientesEnvolvidos.push_back(c);
 }
 
@@ -63,6 +49,6 @@ void Transacao::exibirTransacao(){
     cout << "Data: "    <<  data   << endl;
     cout << "Horario: " << horario << endl;
     cout << "Clientes Envolvidos: " << endl;
-    for(int i = 0; i < clientesEnvolvidos.size(); i++)
-        clientesEnvolvidos[i]->exibirCliente();
+    for(auto* cliente : clientesEnvolvidos)
+        cliente->exibirCliente();
 }

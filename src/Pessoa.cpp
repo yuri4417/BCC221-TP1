@@ -5,7 +5,7 @@ using namespace std;
 //----------------------------------------------------
 //Construtor
     
-Pessoa :: Pessoa(string l = "\0", string s = "\0", string d = "\0"): login(l), senha(s), dataNasc(d){}
+Pessoa::Pessoa(string l, string s, string d) : login(l), senha(s), dataNasc(d) {}
 
 
 
@@ -48,20 +48,11 @@ void Pessoa::setDataNasc(string d) {
 
 //------------------------------------------------------
 //Getters
-string Pessoa::getNome() {
-    return nome;
-}
-string Pessoa::getTrabalho(){
-    return trabalho;
-}
-string Pessoa::getLogin(){
-    return login;
-}
-string Pessoa::getSenha(){
-    return senha;
-}
-
-
+string Pessoa::getNome() const     { return nome; }
+string Pessoa::getTrabalho() const { return trabalho; }
+string Pessoa::getLogin() const    { return login; }
+string Pessoa::getSenha() const    { return senha; }
+string Pessoa::getDataNasc() const { return dataNasc; }
 
 
    

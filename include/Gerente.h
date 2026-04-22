@@ -10,7 +10,11 @@ class Gerente : public Pessoa {
 
 public:
     Gerente();
+<<<<<<< HEAD
     const std::vector<Cliente&> getClientes() const;
+=======
+    const std::vector<Cliente>& getClientes() const;
+>>>>>>> 5a5ec6a (Correção de erros)
     void setCliente(const Cliente&);
     void exibirDados();
 

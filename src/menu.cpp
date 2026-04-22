@@ -61,23 +61,16 @@ void cadastrarCliente() {
 
     cout << " ===== Iniciando Cadastro de Cliente =====" << endl;
     cout << "Digite o nome do cliente: ";
-    cin.getline(temp);
-    if (!temp.empty() && temp.back() == '\n')
-        temp.pop_back();
+    getline(cin >> ws, temp);
     p.setNome(temp);
 
     cout << "Digite a data de nascimento do cliente (dd/mm/aaaa): ";
-    cin.getline(temp);
-    if (!temp.empty() && temp.back() == '\n') 
-        temp.pop_back();
-    
+    getline(cin >> ws, temp);
     p.setDataNasc(temp);
 
 
     cout << "Digite a profissão do cliente: ";
-    cin.getline(temp); 
-    if (!temp.empty() && temp.back() == '\n') 
-        temp.pop_back();
+    getline(cin >> ws, temp);
     p.setTrabalho(temp);
 
 
@@ -90,10 +83,13 @@ void cadastrarCliente() {
     cout << "2. Conta Poupança" << endl;
     cout << "Escolha uma opção: ";
     cin >> opt;
-    while (opt < 1 && opt > 2) {
+    while (!(cin >> opt) || opt < 1 || opt > 2) {
         cout << "Opcao invalida. Tente novamente: ";
+        cin.clear();
         cin >> opt;
+        cin.ignore(1000, '\n');
     }
+
     if (opt == 1) 
         p.setTipoDeConta("Corrente");
     else 
@@ -107,14 +103,12 @@ void cadastrarCliente() {
     }
 
     cout << "Digite o login do cliente: ";
-    cin.getline(temp);
-    if (!temp.empty() && temp.back() == '\n') 
-        temp.pop_back();
+    getline(cin >> ws, temp);
     p.setLogin(temp);
 
 
     cout << "Digite a senha do cliente: ";
-    cin.getline(temp);
+    getline(cin >> ws, temp);
     p.setSenha(temp);
 
     // TODO: Adicionar o cliente ao sistema (banco.adicionarCliente(p);)
