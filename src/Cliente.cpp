@@ -1,15 +1,21 @@
 #include <iostream>
 #include "Cliente.h"
-
 using namespace std;
 
+
+Cliente::Cliente(double remuneracao, string tipoConta, double taxaRendimento,
+                double saldo, const vector<Transacao>& transacoes, string login,
+                string senha, string dataNasc, string nome, string trabalho):
+    Pessoa::Pessoa(nome, login, senha, dataNasc,trabalho){
+    setRemuneracao(remuneracao);
+    setTipoDeConta(tipoConta);
+    setRendimento(taxaRendimento);
+    setSaldo(saldo);
+    setTransacao(transacoes);
+    }
 //-----------------------------------------
 //getters
 
-int Cliente :: getCliente() const{
-    // Voltar aqui
-    return 0;
-}
 string Cliente :: getTipoDeConta() const{
     return tipoDeConta;
 }
@@ -28,23 +34,10 @@ double Cliente:: getRemuneracao() const{
 
 //-----------------------------------------
 //setters
-<<<<<<< HEAD
-=======
-// Adicionar ao vetor de transacoes?
->>>>>>> 5a5ec6a (Correção de erros)
 void Cliente :: setTransacao(const vector<Transacao>& t) {
     transacoes = t;
 }
-void Cliente :: setCliente(const Pessoa& p) {//setCliente preenche os atributos de Pessoa
-<<<<<<< HEAD
-    
-=======
->>>>>>> 5a5ec6a (Correção de erros)
-    setNome(p.getNome());
-    setTrabalho(p.getTrabalho());
-    setLogin(p.getLogin());
-    setSenha(p.getSenha());
-}
+
 void Cliente :: setTipoDeConta(string tipo) {
     tipoDeConta = tipo;
 }
@@ -68,23 +61,16 @@ void Cliente :: exibirDados() {
 }
 
 void Cliente::exibirCliente(){
-    cout << "Nome: " << nome << endl;
+    cout << "Nome: " << getNome() << endl;
 }
 
 //----------------------------------------
 
 ostream& operator <<( std :: ostream& out , const Cliente& c){//Sobrecarga
-<<<<<<< HEAD
-    out << "Remuneração: " << remuneracao << endl;
-    out << "Tipo de conta: " << tipoDeConta << endl;
-    out << "Taxa de rendimento: " << taxaDeRendimento << endl;
-    out << "Saldo: " << saldo << endl;
-=======
     out << "Remuneração: " << c.remuneracao << endl;
     out << "Tipo de conta: " << c.tipoDeConta << endl;
     out << "Taxa de rendimento: " << c.taxaDeRendimento << endl;
     out << "Saldo: " << c.saldo << endl;
->>>>>>> 5a5ec6a (Correção de erros)
     return out;
 }
 /*istream& operator >>( std :: istream& in, Cliente& c){//Sobrecarga

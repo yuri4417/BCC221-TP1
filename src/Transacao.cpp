@@ -1,21 +1,38 @@
 #include "Transacao.h"
 #include "Cliente.h"
 #include <iostream>
+class Transacao;
 using namespace std;
 
-//Construtor aplicando boas praticas, e otimizar inicializacao de valores
-Transacao::Transacao(string t, double v, string d, string h):
-    tipo(t), valor(v), data(d), horario(h) {}
 
+//Construtor aplicando boas praticas, e otimizar inicializacao de valores
+Transacao::Transacao(string t, double v, string d, string h)
+{
+    setTipo(t);
+    setValor(v);
+    setData(d); 
+    setHorario(h);
+}
+    
 
 //------------------------------------
 //getters
 
-string Transacao::getTipo()                      const { return tipo; } 
-double Transacao::getValor()                     const { return valor; } 
-string Transacao::getData()                      const { return data; }
-string Transacao::getHorario()                   const { return horario; }
-const vector<Cliente*>& Transacao::getClientes() const { return clientesEnvolvidos; }
+string Transacao::getTipo() const { 
+    return tipo; 
+} 
+double Transacao::getValor() const { 
+    return valor; 
+} 
+string Transacao::getData() const { 
+    return data; 
+}
+string Transacao::getHorario() const { 
+    return horario; 
+}
+const vector<Cliente*>& Transacao::getClientes() const { 
+    return clientesEnvolvidos; 
+}
 
 //------------------------------------
 //setters

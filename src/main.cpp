@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
-/*#include "Clientes.h"
-#include "Gerentes.h"
+/*#include "Cliente.h"
+#include "Gerente.h"
 #include "Pessoa.h"
 #include "Transacao.h"
 #include <vector>      // vector
@@ -11,9 +11,10 @@ using namespace std;
 #include <set>         // set
 */
 #include "menu.h"
-
+ 
 int main() {
     menu();
+    
     return 0;
 }
 

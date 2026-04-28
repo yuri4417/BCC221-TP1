@@ -14,7 +14,7 @@ class Transacao{
     std::vector<Cliente*> clientesEnvolvidos;    
 public:
     //Construtor
-    Transacao(std::string, double, std::string, std::string);
+    Transacao(std::string t = "", double v = 0.0, std::string d= "", std::string h = "");
     
     //getters
     std::string getTipo() const; 

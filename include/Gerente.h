@@ -1,6 +1,7 @@
 #ifndef GERENTE_H
 #define GERENTE_H
 #include <vector>
+#include <string>
 #include "Pessoa.h"
 
 class Cliente;
@@ -9,12 +10,8 @@ class Gerente : public Pessoa {
     std::vector<Cliente> clientes;
 
 public:
-    Gerente();
-<<<<<<< HEAD
-    const std::vector<Cliente&> getClientes() const;
-=======
+    Gerente(std::string n="", std::string l="", std::string s="", std::string d="", std::string t="");
     const std::vector<Cliente>& getClientes() const;
->>>>>>> 5a5ec6a (Correção de erros)
     void setCliente(const Cliente&);
     void exibirDados();
 

@@ -5,7 +5,7 @@
 #include <vector>
 
 
-class Cliente : public Pessoa {
+class Cliente: public Pessoa {
     double remuneracao;
     std::string tipoDeConta;
     double taxaDeRendimento;
@@ -14,10 +14,13 @@ class Cliente : public Pessoa {
 
 public:
 
+//Construtor
+    Cliente(double remuneracao = 0, std::string tipoConta = "", double taxaRendimento = 0, double saldo = 0,
+        const std::vector<Transacao>& transacoes = {}, std::string login ="", std::string senha ="", 
+        std::string dataNasc ="", std::string nome ="", std::string trabalho ="");
 
-//----------------------------------------
+        //----------------------------------------
 //getters
-    int getCliente() const;
     const std::vector<Transacao>& getExtrato() const;
     std::string getTipoDeConta() const;
     double getSaldo() const;
@@ -26,8 +29,7 @@ public:
 
 //----------------------------------------
 //setters
-    void setCliente(const Pessoa&);
-    void setTransacao(const Transacao&);
+    void setTransacao(const std::vector<Transacao>&);
     void setTipoDeConta(std::string);
     void setSaldo(double);
     void setRendimento(double);

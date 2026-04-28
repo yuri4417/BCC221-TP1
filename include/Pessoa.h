@@ -2,17 +2,14 @@
 #define PESSOA_H
 #include <string>
 class Pessoa{
+    std::string nome;
     std::string login;
     std::string senha;
     std::string dataNasc;
-    
+    std::string trabalho;
 public:
 
-    Pessoa(std::string l = "", std::string s = "", std::string d = "");
-
-    std::string nome;
-    std::string trabalho;
-
+    Pessoa(std::string n="", std::string l="", std::string s="", std::string d="", std::string t="");
     void exibirDados();
 
     //---------------------------------
