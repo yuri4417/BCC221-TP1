@@ -1,12 +1,14 @@
 #include <iostream>
 #include "Cliente.h"
+#include "menu.h"
 using namespace std;
 
-
-Cliente::Cliente(double remuneracao, string tipoConta, double taxaRendimento,
-                double saldo, const vector<Transacao>& transacoes, string login,
-                string senha, string dataNasc, string nome, string trabalho):
-    Pessoa::Pessoa(nome, login, senha, dataNasc,trabalho){
+Cliente::Cliente(string nome, string login, string senha, string dataNasc, string trabalho,size_t ID,
+                size_t gerenteAssociadoID, double remuneracao, string tipoConta, double taxaRendimento,
+                double saldo, const vector<Transacao*>& transacoes):
+    Pessoa(nome, login, senha, dataNasc, trabalho) {
+    setID(ID);
+    setGerenteAssociadoID(gerenteAssociadoID);
     setRemuneracao(remuneracao);
     setTipoDeConta(tipoConta);
     setRendimento(taxaRendimento);
@@ -15,7 +17,12 @@ Cliente::Cliente(double remuneracao, string tipoConta, double taxaRendimento,
     }
 //-----------------------------------------
 //getters
-
+size_t Cliente :: getID() const{
+    return ID;
+}
+size_t Cliente :: getGerenteAssociadoID() const{
+    return (gerenteAssociadoID != __INT_MAX__) ? ID : 0; 
+}
 string Cliente :: getTipoDeConta() const{
     return tipoDeConta;
 }
@@ -25,7 +32,7 @@ double Cliente :: getSaldo() const{
 double Cliente :: getRendimento() const{
     return taxaDeRendimento;
 }
-const vector<Transacao>& Cliente :: getExtrato() const{
+const vector<Transacao*>& Cliente :: getExtrato() const{
     return transacoes;
 }
 double Cliente:: getRemuneracao() const{
@@ -34,7 +41,13 @@ double Cliente:: getRemuneracao() const{
 
 //-----------------------------------------
 //setters
-void Cliente :: setTransacao(const vector<Transacao>& t) {
+void Cliente :: setID(size_t id) {
+    ID = id;
+}
+void Cliente :: setGerenteAssociadoID(size_t idAssociado) {
+    gerenteAssociadoID = idAssociado;
+}
+void Cliente :: setTransacao(const vector<Transacao*>& t) {
     transacoes = t;
 }
 
@@ -53,7 +66,7 @@ void Cliente:: setRemuneracao(double r) {
 }
 
 //-----------------------------------------
-void Cliente :: exibirDados() {
+void Cliente::exibirDados() {
     cout<< "Remuneração: " << remuneracao << endl;
     cout<< "Tipo de conta: " << tipoDeConta << endl;
     cout<< "Taxa de rendimento: " << taxaDeRendimento << endl;
@@ -62,6 +75,60 @@ void Cliente :: exibirDados() {
 
 void Cliente::exibirCliente(){
     cout << "Nome: " << getNome() << endl;
+}
+
+void Cliente :: cadastro() {
+
+    string temp;
+    clearTerminal();
+    cout << endl;
+    cout << " ===== Iniciando Cadastro de Cliente =====" << endl << endl;
+    cout << "Digite o nome do cliente: ";
+    getline(cin >> ws, temp);
+    this->setNome(temp);
+
+    cout << "Digite a data de nascimento do cliente (dd/mm/aaaa): ";
+    getline(cin >> ws, temp);
+    this->setDataNasc(temp);
+
+    cout << "Digite a profissão do cliente: ";
+    getline(cin >> ws, temp);
+    this->setTrabalho(temp);
+
+    float salario;
+    cout << "Digite o salario do cliente: ";
+    cin >> salario;
+    int opt;
+    cout << "Escolha uma modalidade de conta: " << endl;
+    cout << "1. Conta Corrente" << endl;
+    cout << "2. Conta Poupança" << endl;
+    cout << "Escolha uma opção: ";
+    while (!(cin >> opt) || opt < 1 || opt > 2) {
+        cout << "Opcao invalida. Tente novamente: ";
+        cin.clear();
+        cin >> opt;
+        cin.ignore(1000, '\n');
+    }
+    if (opt == 1) 
+        this->setTipoDeConta("Corrente");
+    else 
+        this->setTipoDeConta("Poupanca");
+
+    if (opt == 2) {
+        float taxa;
+        cout << "Digite a taxa (%) de rendimento da conta poupança: ";
+        cin >> taxa;
+        this->setRendimento(taxa);
+    }
+
+    cout << "Digite o login do cliente: ";
+    getline(cin >> ws, temp);
+    this->setLogin(temp);
+
+    cout << "Digite a senha do cliente: ";
+    getline(cin >> ws, temp);
+    this->setSenha(temp);    
+
 }
 
 //----------------------------------------

@@ -4,14 +4,9 @@ using namespace std;
 
 //----------------------------------------------------
 //Construtor
-    
-Pessoa::Pessoa(string n, string l , string s, string d, string t) {
-    setNome(n); setLogin(l); setSenha(s); setDataNasc(d); setTrabalho(t);
-}
 
-void Pessoa::exibirDados(){
-    cout << "Nome: " << nome << endl;
-    cout << "Trabalho: " << trabalho << endl;
+Pessoa::Pessoa(string n, string l, string s, string d, string t) {
+    setNome(n); setLogin(l); setSenha(s); setDataNasc(d); setTrabalho(t);
 }
 
 //------------------------------------------------------
@@ -24,28 +19,13 @@ void Pessoa::setTrabalho(string t){
     trabalho = t;
 }
 void Pessoa::setLogin(string l) {
-    /*while (l.length() == 0) {
-        cout << "Login Vazio! Digite novamente: ";
-        cin >> l;
-    }
-    */
     login = l;
 }
 void Pessoa::setSenha(string s) {
-    /*while (s.length() == 0) {
-        cout << "Senha Vazia! Digite novamente: ";
-        cin >> s;
-    }
-    */
     senha = s;
 }
 
 void Pessoa::setDataNasc(string d) {
-    /*while (d.length() == 0) {
-        cout << "Data de Nascimento Vazia! Digite novamente: ";
-        cin >> d;
-    }
-    */
     dataNasc = d;
 }
 
@@ -67,5 +47,3 @@ string Pessoa::getDataNasc() const {
     return dataNasc; 
 }
 
-
-   

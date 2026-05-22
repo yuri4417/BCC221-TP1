@@ -13,8 +13,8 @@ using namespace std;
 #include "menu.h"
  
 int main() {
-    menu();
-    
+    Banco banco;
+    banco.run();
     return 0;
 }
 
