@@ -1,11 +1,12 @@
 #include <iostream>
+#include <string>
 #include "Cliente.h"
 #include "menu.h"
 using namespace std;
 
 Cliente::Cliente(string nome, string login, string senha, string dataNasc, string trabalho,size_t ID,
                 size_t gerenteAssociadoID, double remuneracao, string tipoConta, double taxaRendimento,
-                double saldo, const vector<Transacao*>& transacoes):
+                double saldo, const vector<Transacao*>& transacoes,CartaoCredito* cartao):
     Pessoa(nome, login, senha, dataNasc, trabalho) {
     setID(ID);
     setGerenteAssociadoID(gerenteAssociadoID);
@@ -14,6 +15,7 @@ Cliente::Cliente(string nome, string login, string senha, string dataNasc, strin
     setRendimento(taxaRendimento);
     setSaldo(saldo);
     setTransacao(transacoes);
+    setCartao(cartao); 
     }
 //-----------------------------------------
 //getters
@@ -23,6 +25,10 @@ size_t Cliente :: getID() const{
 size_t Cliente :: getGerenteAssociadoID() const{
     return (gerenteAssociadoID != __INT_MAX__) ? ID : 0; 
 }
+vector<Transacao*> Cliente :: getTransacoes() const{
+    return transacoes;
+}
+
 string Cliente :: getTipoDeConta() const{
     return tipoDeConta;
 }
@@ -38,6 +44,10 @@ const vector<Transacao*>& Cliente :: getExtrato() const{
 double Cliente:: getRemuneracao() const{
     return remuneracao;
 }
+CartaoCredito* Cliente::getCartao() {
+    return cartao;
+}
+
 
 //-----------------------------------------
 //setters
@@ -61,26 +71,28 @@ void Cliente :: setRendimento(double t) {
     taxaDeRendimento = t;
 }
 
-void Cliente:: setRemuneracao(double r) {
+void Cliente :: setRemuneracao(double r) {
     remuneracao = r;
+}
+
+void Cliente :: setCartao(CartaoCredito* c) {
+    cartao = c; 
 }
 
 //-----------------------------------------
 void Cliente::exibirDados() {
-    cout<< "Remuneração: " << remuneracao << endl;
-    cout<< "Tipo de conta: " << tipoDeConta << endl;
-    cout<< "Taxa de rendimento: " << taxaDeRendimento << endl;
-    cout<< "Saldo: " << saldo << endl;
+    cout<< "======= Dados do Cliente =======" << endl;
+    cout << *this;
+    cout << "Dados Privados do Cliente:" << endl;
+    cout << "Login: " << getLogin() << endl;
+    cout << "Senha: " << getSenha() << endl;
+    cout << "===============================" << endl;
 }
 
-void Cliente::exibirCliente(){
-    cout << "Nome: " << getNome() << endl;
-}
-
-void Cliente :: cadastro() {
+void Cliente::cadastro() {
 
     string temp;
-    clearTerminal();
+    
     cout << endl;
     cout << " ===== Iniciando Cadastro de Cliente =====" << endl << endl;
     cout << "Digite o nome do cliente: ";
@@ -131,16 +143,43 @@ void Cliente :: cadastro() {
 
 }
 
+void Cliente::criarCartao() {
+    if(cartao != nullptr)
+        return;
+ 
+    cartao = new CartaoCredito(0,0,false);
+
+    double limiteInicial = getRemuneracao() * 2.0;
+
+    cartao->setLimite(limiteInicial);
+}
+
 //----------------------------------------
 
 ostream& operator <<( std :: ostream& out , const Cliente& c){//Sobrecarga
-    out << "Remuneração: " << c.remuneracao << endl;
-    out << "Tipo de conta: " << c.tipoDeConta << endl;
-    out << "Taxa de rendimento: " << c.taxaDeRendimento << endl;
-    out << "Saldo: " << c.saldo << endl;
+    out << "Nome: " << c.getNome()  << endl;
+    out << "ID: " << c.getID() << endl;
+    out << "Remuneração: " << c.getRemuneracao() << endl;
+    out << "Tipo de conta: " << c.getTipoDeConta() << endl;
+    out << "Taxa de rendimento: " << c.getRendimento() << endl;
+    out << "Saldo: " << c.getSaldo() << endl;
+    out << "Gerente Associado ID: " << c.getGerenteAssociadoID() << endl;
     return out;
 }
 /*istream& operator >>( std :: istream& in, Cliente& c){//Sobrecarga
     in >> c.remuneracao >> c.tipoDeConta >> c.taxaDeRendimento >> c.saldo;
     return in;
 }*/
+
+void Cliente::pushTransacao(Transacao* t) {//insere nova transação no vetor de transações do cliente
+    this->transacoes.push_back(t);
+}
+void Cliente::rendimento()
+{
+    if(tipoDeConta == "2")
+    {
+        saldo += saldo * (taxaDeRendimento /100);
+        return;
+    }
+}
+Cliente::~Cliente() {}

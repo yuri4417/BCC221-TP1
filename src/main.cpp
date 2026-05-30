@@ -13,6 +13,7 @@ using namespace std;
 #include "menu.h"
  
 int main() {
+    //só quer pão só quer mel
     Banco banco;
     banco.run();
     return 0;

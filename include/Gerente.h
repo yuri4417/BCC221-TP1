@@ -10,7 +10,7 @@ class Gerente : public Pessoa {
     size_t ID;
     std::vector<Cliente*> clientes;
 public:
-    Gerente(std::string n="", std::string l="", std::string s="", std::string d="", std::string t="");
+    Gerente(std::string n="", std::string l="", std::string s="", std::string d="", std::string t="", size_t id=__INT_MAX__);
     const std::vector<Cliente*> getClientes() const;
     void setCliente(Cliente*);
     void exibirDados() override;
@@ -18,6 +18,7 @@ public:
     void setID(size_t);
 
     virtual void cadastro();    
+    friend std::ostream& operator << (std::ostream&, const Gerente&);
 };
 
 

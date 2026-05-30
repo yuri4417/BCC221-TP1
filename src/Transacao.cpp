@@ -8,7 +8,7 @@ Transacao::Transacao(int t, double v, string d, string h)
 {
     setTipo(t);
     setValor(v);
-    setData(d); 
+    setData(d);
     setHorario(h);
 }
 
@@ -66,44 +66,54 @@ void Transacao::exibirTransacao(){
     cout << "Horario: " << horario << endl;
     cout << "Clientes Envolvidos: " << endl;
     for(auto cliente : clientesEnvolvidos)
-        cliente->exibirCliente();
+        cout << "Nome: " << cliente->getNome() << endl;
 }
 
-void Transacao :: transacoes(int tipo){
-    if(tipo == 1){
-        //acao(clientes[0], clientes, valor)
+/*
+bool Transacao :: transacoes(){
+    if(tipo == 1){//priemira posição do vetor clientes é o remetente, as demais são os destinatários
+        return acao(clientesEnvolvidos, valor);
     } else if(tipo == 2){
-        acao(clientesEnvolvidos[0], valor);
-    } else if(tipo == 3){//loser         
-        acao(clientesEnvolvidos[0], (-1) * valor);
+        return acao(clientesEnvolvidos[0], valor);
+    } else if(tipo == 3){       
+        return acao(clientesEnvolvidos[0], (-1) * valor);
     }
-}
-
+}*/
        
-void Transacao :: acao(Cliente *cliente, double valor){ //Depósito e saque
+
+void Transacao::pushClienteEnvolvido(Cliente* cli) {
+    this->clientesEnvolvidos.push_back(cli);
+}
+bool Transacao :: acao(Cliente *cliente, double valor){ //Depósito e saque
+    if (valor == 0){
+        cout << "Valor inválido..." << endl;
+        return false;
+    }
     if(valor < 0){//Saque
-        if(valor > cliente->getSaldo()){
+        if(-valor > cliente->getSaldo()){
             cout << "Saldo insuficiente" << endl;
-            return;
+            return false;
         }
-        else
-            cout<< "Saque Concluído..." <<endl;
+        else{
+            cout << "Saque Concluído..." << endl;
+        }
     }
     else{//Depósito
-        cout << "Depósito Concluído..." <<endl;
+        cout<< "Depósito Concluído..." <<endl;
     }
     cliente->setSaldo(cliente->getSaldo() + valor);
+    return true;
 }
 
-void Transacao :: acao(Cliente* a, vector <Cliente*> b, double valor){ //Transferência ("valor" se refere à quantia que cada cliente receberá)
-    if(valor * b.size() > a->getSaldo()){
+bool Transacao :: acao(vector <Cliente*> clientes, double valor){ //Transferência ("valor" se refere à quantia que cada cliente receberá)
+    if(valor * (clientes.size() - 1) > clientes[0]->getSaldo()){
         cout << "Saldo Insuficiente...\n";
-        return;
+        return false;
     }
-    for(auto item : b){
-        item->setSaldo(item->getSaldo() + valor);
-        a->setSaldo(a->getSaldo() - valor);
-        //acao(item, valor);
-        //acao(a, -valor);
+    for (auto it = clientes.begin() + 1; it != clientes.end(); ++it) {//primeira posição do vetor clientes é o remetente, as demais são os destinatários
+
+        (*it)->setSaldo((*it)->getSaldo() + valor);
+        clientes[0]->setSaldo(clientes[0]->getSaldo() - valor);
     }
+    return true;
 }

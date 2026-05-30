@@ -32,8 +32,9 @@ public:
     void exibirTransacao();
 
     //Transações
-    void transacoes(int tipo);
-    void acao(Cliente* cliente, double valor);
-    void acao(Cliente* a, std::vector<Cliente*> b, double valor);
+    //bool transacoes();
+    void pushClienteEnvolvido(Cliente* cli);
+    bool acao(Cliente* cliente, double valor);
+    bool acao(std::vector<Cliente*> b, double valor);
 };
 #endif

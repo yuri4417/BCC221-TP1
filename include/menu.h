@@ -15,25 +15,36 @@ class Banco {
 public:
     Banco(int qtdC = 0, int qtdG = 0);
     void run();
-    void cadastrarCliente(size_t);
-    void cadastrarGerente(size_t);
+    void cadastrarCliente();
+    void cadastrarGerente();
     void associarGerenteCliente();
-    void listarClientes(vector<Cliente*> vecCliente);
-    void listarGerentes(vector<Gerente*> vecGerente);
-    
+    void imprimirOpcoes();
+    void criarTransacao();
+    void exibirExtrato();
+    void listarClientes();
+    void listarGerentes();
+    void carregaDados();
+    void salvaDados();
+    void cartaoCredito();
+    void criarCartao();
+    void cadernetaDePoupanca();
+
+    template<typename T>
+    void showVector(vector<T*>& vec, string msg) {
+        cout << msg << endl;
+        for (auto ptr : vec)
+            cout << *ptr;
+        cout << endl;
+    }
+    Cliente* pesquisaIDCliente(size_t);
+
+
     int getQtdCliente() const;
     int getQtdGerente() const;
-    
-    void setQtdCliente(int qtdCliente);
-    void setQtdGerente(int qtdCliente);
+    void setQtdCliente(int);
+    void setQtdGerente(int);
+
+    friend Cliente* pesquisaIDCliente(size_t);
 };
 
-
-void clearTerminal();
-void imprimirOpcoes();
-void criarTransacao();
-void exibirExtrato();
-
-
-void salvarSair();
 #endif
