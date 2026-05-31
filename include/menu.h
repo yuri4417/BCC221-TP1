@@ -11,6 +11,7 @@ class Banco {
     int qtdGerentes;
     vector <Cliente*> vecCliente;
     vector <Gerente*> vecGerente;
+    vector <Transacao*> vecTransacao;
 
 public:
     Banco(int qtdC = 0, int qtdG = 0);
@@ -25,8 +26,16 @@ public:
     void listarGerentes();
     void carregaDados();
     void salvaDados();
+
+    
     void cartaoCredito();
     void criarCartao();
+    void listarCartao();
+    void bloquear();
+    void desbloquear();
+    void alterarLimite();
+    void pagamentoParcelado();
+    void pagarFatura();
     void cadernetaDePoupanca();
 
     template<typename T>
@@ -36,7 +45,14 @@ public:
             cout << *ptr;
         cout << endl;
     }
-    Cliente* pesquisaIDCliente(size_t);
+    template<typename T>
+    T* pesquisaID(const std::vector<T*>& vec, size_t id) {
+        for (auto ptr : vec) {
+            if (ptr->getID() == id)
+                return ptr;
+        }
+        return nullptr;
+    }
 
 
     int getQtdCliente() const;
@@ -45,6 +61,7 @@ public:
     void setQtdGerente(int);
 
     friend Cliente* pesquisaIDCliente(size_t);
+    ~Banco();
 };
 
 #endif

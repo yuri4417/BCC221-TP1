@@ -47,3 +47,4 @@ string Pessoa::getDataNasc() const {
     return dataNasc; 
 }
 
+Pessoa::~Pessoa(){}

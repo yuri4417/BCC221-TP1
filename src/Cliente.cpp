@@ -2,6 +2,7 @@
 #include <string>
 #include "Cliente.h"
 #include "menu.h"
+#include "utils.h"
 using namespace std;
 
 Cliente::Cliente(string nome, string login, string senha, string dataNasc, string trabalho,size_t ID,
@@ -44,7 +45,7 @@ const vector<Transacao*>& Cliente :: getExtrato() const{
 double Cliente:: getRemuneracao() const{
     return remuneracao;
 }
-CartaoCredito* Cliente::getCartao() {
+CartaoCredito* Cliente::getCartao() const{
     return cartao;
 }
 
@@ -82,72 +83,97 @@ void Cliente :: setCartao(CartaoCredito* c) {
 //-----------------------------------------
 void Cliente::exibirDados() {
     cout<< "======= Dados do Cliente =======" << endl;
-    cout << *this;
+    cout << "Nome: " << getNome()  << endl;
+    cout << "ID: " << getID() << endl;
+    cout << "Remuneração: " << getRemuneracao() << endl;
+    cout << "Tipo de conta: " << getTipoDeConta() << endl;
+    cout << "Taxa de rendimento: " << getRendimento() << endl;
+    cout << "Saldo: " << getSaldo() << endl;
+    cout << "Gerente Associado ID: " << getGerenteAssociadoID() << endl;
+    cout << "Cartão de Crédito: ";
+    CartaoCredito* cc = getCartao();
+    if(cc == nullptr)
+        cout << "Cliente não possui cartão de crédito" << endl;
+    else{
+        cout << cc->getNumero();
+        if(cc->getBloqueado() == false)
+            cout << " (Ativo)" << endl;
+        else
+            cout << " (Inativo)" << endl;
+        cout << endl;
+    }
+    cout << "===============================" << endl;
     cout << "Dados Privados do Cliente:" << endl;
     cout << "Login: " << getLogin() << endl;
     cout << "Senha: " << getSenha() << endl;
     cout << "===============================" << endl;
 }
 
-void Cliente::cadastro() {
-
-    string temp;
-    
-    cout << endl;
-    cout << " ===== Iniciando Cadastro de Cliente =====" << endl << endl;
-    cout << "Digite o nome do cliente: ";
-    getline(cin >> ws, temp);
-    this->setNome(temp);
-
-    cout << "Digite a data de nascimento do cliente (dd/mm/aaaa): ";
-    getline(cin >> ws, temp);
-    this->setDataNasc(temp);
-
-    cout << "Digite a profissão do cliente: ";
-    getline(cin >> ws, temp);
-    this->setTrabalho(temp);
-
+bool Cliente::cadastro() {
+    clearTerminal();
+    cout << " ===== Iniciando Cadastro de Cliente =====" << endl;
+    string nome;
+    string dataNasc;
+    string profissao;
     float salario;
-    cout << "Digite o salario do cliente: ";
-    cin >> salario;
-    int opt;
+    int tipoConta;
+    float taxa;
+    string login;
+    string senha;
+    
+
+    if (!lerEntrada(nome, BOLD("Digite o nome do cliente"), ": "))
+        return false;
+
+    if (!lerEntrada(dataNasc, BOLD("Digite a data de nascimento do cliente (dd/mm/aaaa)"), ": "))
+        return false;
+
+    if (!lerEntrada(profissao, BOLD("Digite a profissão do cliente"), ": "))
+        return false;
+
+    if (!lerEntrada(salario, BOLD("Digite o salario do cliente"), ": "))
+        return false;
+
     cout << "Escolha uma modalidade de conta: " << endl;
     cout << "1. Conta Corrente" << endl;
     cout << "2. Conta Poupança" << endl;
-    cout << "Escolha uma opção: ";
-    while (!(cin >> opt) || opt < 1 || opt > 2) {
-        cout << "Opcao invalida. Tente novamente: ";
-        cin.clear();
-        cin >> opt;
-        cin.ignore(1000, '\n');
+    while (1) {
+        if (!lerEntrada(tipoConta, BOLD("Escolha uma opção"), ": "))
+            return false;
+        if (tipoConta >= 1 && tipoConta <= 2)
+            break;
+        cout << BOLD(RED("Opcao invalida. Tente novamente: "));
     }
-    if (opt == 1) 
+    
+
+    if (tipoConta == 2) 
+        if (!lerEntrada(taxa, BOLD("Digite a taxa (%) de rendimento da conta poupança"), ": "))
+            return false;
+    
+    if (!lerEntrada(login, BOLD("Digite o login do cliente"), ": "))
+        return false;
+    if (!lerEntrada(senha, BOLD("Digite a senha do cliente"), ": "))
+        return false;
+
+    this->setNome(nome);
+    this->setDataNasc(dataNasc);
+    this->setTrabalho(profissao);
+    this->setRemuneracao(salario);
+    if (tipoConta == 1) 
         this->setTipoDeConta("Corrente");
     else 
         this->setTipoDeConta("Poupanca");
-
-    if (opt == 2) {
-        float taxa;
-        cout << "Digite a taxa (%) de rendimento da conta poupança: ";
-        cin >> taxa;
-        this->setRendimento(taxa);
-    }
-
-    cout << "Digite o login do cliente: ";
-    getline(cin >> ws, temp);
-    this->setLogin(temp);
-
-    cout << "Digite a senha do cliente: ";
-    getline(cin >> ws, temp);
-    this->setSenha(temp);    
-
+    this->setRendimento(tipoConta == 2 ? taxa : 0);
+    this->setLogin(login);
+    this->setSenha(senha);
+    return true;
 }
 
 void Cliente::criarCartao() {
     if(cartao != nullptr)
         return;
  
-    cartao = new CartaoCredito(0,0,false);
+    cartao = new CartaoCredito(0, "", 0, 0, false, nullptr);
 
     double limiteInicial = getRemuneracao() * 2.0;
 
@@ -157,13 +183,7 @@ void Cliente::criarCartao() {
 //----------------------------------------
 
 ostream& operator <<( std :: ostream& out , const Cliente& c){//Sobrecarga
-    out << "Nome: " << c.getNome()  << endl;
-    out << "ID: " << c.getID() << endl;
-    out << "Remuneração: " << c.getRemuneracao() << endl;
-    out << "Tipo de conta: " << c.getTipoDeConta() << endl;
-    out << "Taxa de rendimento: " << c.getRendimento() << endl;
-    out << "Saldo: " << c.getSaldo() << endl;
-    out << "Gerente Associado ID: " << c.getGerenteAssociadoID() << endl;
+    cout << "ID: "<< c.getID()  << " | Nome:" << c.getNome() << endl;
     return out;
 }
 /*istream& operator >>( std :: istream& in, Cliente& c){//Sobrecarga
@@ -176,7 +196,7 @@ void Cliente::pushTransacao(Transacao* t) {//insere nova transação no vetor de
 }
 void Cliente::rendimento()
 {
-    if(tipoDeConta == "2")
+    if(tipoDeConta == "Poupanca")
     {
         saldo += saldo * (taxaDeRendimento /100);
         return;

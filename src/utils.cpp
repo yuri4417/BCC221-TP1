@@ -2,8 +2,10 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
-
+#include <string>
+#include <sstream>
 using namespace std;
+
 void clearTerminal() {
     cout << "\033[H\033[2J"; 
 }
@@ -29,4 +31,10 @@ int perguntaSN(string str) {
 
 void delay_ms(int ms) {
     this_thread::sleep_for(chrono::milliseconds(ms));
+}
+
+void confirmar(string mensagem) {
+    cout << mensagem;
+    string lixo;
+    getline(cin, lixo);
 }

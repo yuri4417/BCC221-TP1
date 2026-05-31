@@ -11,12 +11,8 @@ Transacao::Transacao(int t, double v, string d, string h)
     setData(d);
     setHorario(h);
 }
-
-
-
 //------------------------------------
 //getters
-
 int Transacao::getTipo() const { 
     return tipo; 
 } 
@@ -35,23 +31,18 @@ const vector<Cliente*>& Transacao::getClientes() const {
 
 //------------------------------------
 //setters
-
 void Transacao :: setTipo(int t){
     tipo = t;
 }
-
 void Transacao :: setValor(double x){
     valor = x;
 }
-
 void Transacao :: setData(string d){
     data = d;
 }
-
 void Transacao :: setHorario(string h){
     horario = h; 
 }
-
 void Transacao :: setClientes(vector <Cliente*> vecCliente){
     clientesEnvolvidos = vecCliente;
 }
@@ -117,3 +108,5 @@ bool Transacao :: acao(vector <Cliente*> clientes, double valor){ //Transferênc
     }
     return true;
 }
+
+Transacao::~Transacao(){}

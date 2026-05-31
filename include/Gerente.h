@@ -17,8 +17,11 @@ public:
     size_t getID() const;
     void setID(size_t);
 
-    virtual void cadastro();    
+    virtual bool cadastro();    
     friend std::ostream& operator << (std::ostream&, const Gerente&);
+
+
+    virtual ~Gerente();
 };
 
 

@@ -10,7 +10,9 @@ using namespace std;
 Gerente::Gerente(string n, string l, string s, string d, string t, size_t id):
     Pessoa(n, l, s, d, t) { ID = id;}
     
-void Gerente :: setCliente(Cliente* c) {
+Gerente::~Gerente() {}
+
+void Gerente::setCliente(Cliente* c) {
     clientes.push_back(c);
 }
  
@@ -18,9 +20,16 @@ const vector<Cliente*> Gerente::getClientes() const{
     return clientes;
 }
 
-void Gerente:: exibirDados() {
+void Gerente::exibirDados() {
     cout << "===== Dados do Gerente =====" << endl;
-    cout << *this << endl; // Usa a sobrecarga do operador << para exibir os dados do gerente
+    cout << "Nome: " << getNome() << endl;
+    cout << "ID: " << getID() << endl;
+    cout << "Trabalho: " << getTrabalho() << endl;
+    cout << "Qtd de clientes relacionados: " << getClientes().size() << endl;
+    cout << "Clientes relacionados: " << endl;
+    for (const auto& cliente : getClientes()) {
+        cout << " - " << cliente->getNome() << " (ID: " << cliente->getID() << ")" << endl;
+    }
     cout << "Dados Privados do Gerente:" << endl;
     cout << "Login: " << getLogin() << endl;
     cout << "Senha: " << getSenha() << endl;
@@ -34,40 +43,35 @@ void Gerente::setID(size_t id){
     ID = id;
 }
 
-void Gerente :: cadastro(){
-    string temp;
+bool Gerente::cadastro(){
     clearTerminal();
-    cout << " ===== Iniciando Cadastro de Gerente =====" << endl;
-    cout << "Digite o nome do Gerente: ";
-    getline(cin >> ws, temp);
-    this->setNome(temp);
+    cout << BOLD(GREEN(" ===== Iniciando Cadastro de Gerente =====")) << endl;
+    string nome;
+    string dataNasc;
+    string trabalho;
+    string login;
+    string senha;
 
-    cout << "Digite a data de nascimento do Gerente (dd/mm/aaaa): ";
-    getline(cin >> ws, temp);
-    this->setDataNasc(temp);
+    if (!lerEntrada(nome, BOLD("Digite o nome do Gerente"), ": "))
+        return false;
+    if (!lerEntrada(dataNasc, BOLD("Digite a data de nascimento do Gerente (dd/mm/aaaa)"), ": "))
+        return false;
+    if (!lerEntrada(trabalho, BOLD("Digite a profissão do Gerente"), ": "))
+        return false;
+    if (!lerEntrada(login, BOLD("Digite o login do Gerente"), ": "))
+        return false;
+    if (!lerEntrada(senha, BOLD("Digite a senha do Gerente"), ": "))
+        return false;
 
-    cout << "Digite a profissão do Gerente: ";
-    getline(cin >> ws, temp);
-    this->setTrabalho(temp);
-
-    cout << "Digite o login do Gerente: ";
-    getline(cin >> ws, temp);
-    this->setLogin(temp);
-    //cout << "Gerente Associado: " << cliente->getGerenteAssociadoID() << endl;
-    cout << "Digite a senha do Gerente: ";
-    getline(cin >> ws, temp);
-    this->setSenha(temp);
+    this->setNome(nome);
+    this->setTrabalho(trabalho);
+    this->setLogin(login);
+    this->setSenha(senha);
+    return true;
 }
 
 ostream& operator<<( std :: ostream& out , const Gerente& g) {//Sobrecarga
-    out << "Nome: " << g.getNome() << endl;
-    out << "ID: " << g.getID() << endl;
-    out << "Trabalho: " << g.getTrabalho() << endl;
-    out << "Qtd de clientes relacionados: " << g.getClientes().size() << endl;
-    out << "Clientes relacionados: " << endl;
-    for (const auto& cliente : g.getClientes()) {
-        out << " - " << cliente->getNome() << " (ID: " << cliente->getID() << ")" << endl;
-    }
+    cout << "ID: "<< g.getID()  << " | Nome:" << g.getNome() << endl;
     return out;
 }
 // istream& operator >>( std :: istream& in, Cliente& c){//Sobrecarga

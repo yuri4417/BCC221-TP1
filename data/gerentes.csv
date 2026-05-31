@@ -1,1 +1,3 @@
-nome,login,senha,dataNasc,trabalho,ID,clientesAssociados
+nome,login,senha,trabalho,ID,clientesAssociados
+Guillermo,1,1,Profess,1,[1;2;3;2;2;2]
+G,ontem,1,amanha,2,[2;1]

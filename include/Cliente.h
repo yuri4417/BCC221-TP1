@@ -18,7 +18,6 @@ class Cliente: public Pessoa {
     CartaoCredito* cartao;
 
 public:
-
 //Construtor
     Cliente(std::string nome ="", std::string login ="", std::string senha ="", std::string dataNasc ="", std::string trabalho ="",
             size_t ID = 0,size_t gerenteAssociadoID = __INT_MAX__, double remuneracao = 0, std::string tipoConta = "", double taxaRendimento = 0,
@@ -34,7 +33,7 @@ public:
     double getRemuneracao() const;
     size_t getID() const;
     size_t getGerenteAssociadoID() const;
-    CartaoCredito* getCartao();
+    CartaoCredito* getCartao() const;
     
 //----------------------------------------
 //setters
@@ -49,7 +48,7 @@ public:
     void exibirDados() override;
     void rendimento();
 
-    virtual void cadastro();
+    virtual bool cadastro();
     void criarCartao();
 
 //----------------------------------------

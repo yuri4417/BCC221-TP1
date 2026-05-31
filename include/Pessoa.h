@@ -30,7 +30,8 @@ public:
     void setDataNasc(std::string);
     void setTrabalho(std::string);
 
-    virtual void cadastro() = 0;
+    virtual bool cadastro() = 0;
+    virtual ~Pessoa();
 };
 
 #endif

@@ -36,5 +36,6 @@ public:
     void pushClienteEnvolvido(Cliente* cli);
     bool acao(Cliente* cliente, double valor);
     bool acao(std::vector<Cliente*> b, double valor);
+    ~Transacao();
 };
 #endif
