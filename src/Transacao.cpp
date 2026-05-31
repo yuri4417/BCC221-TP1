@@ -4,6 +4,7 @@
 class Transacao;
 using namespace std;
 
+//Construtor setando o tipo,valor, data e horário da transação
 Transacao::Transacao(int t, double v, string d, string h)
 {
     setTipo(t);
@@ -11,7 +12,7 @@ Transacao::Transacao(int t, double v, string d, string h)
     setData(d);
     setHorario(h);
 }
-//------------------------------------
+
 //getters
 int Transacao::getTipo() const { 
     return tipo; 
@@ -29,7 +30,6 @@ const vector<Cliente*>& Transacao::getClientes() const {
     return clientesEnvolvidos; 
 }
 
-//------------------------------------
 //setters
 void Transacao :: setTipo(int t){
     tipo = t;
@@ -47,9 +47,7 @@ void Transacao :: setClientes(vector <Cliente*> vecCliente){
     clientesEnvolvidos = vecCliente;
 }
 
-//-----------------------------------------
-//exibir 
-
+// Exibe as transacoes realizadas 
 void Transacao::exibirTransacao(){
     cout << "Tipo: "    <<  tipo   << endl;
     cout << "Valor: "   <<  valor  << endl;
@@ -60,22 +58,13 @@ void Transacao::exibirTransacao(){
         cout << "Nome: " << cliente->getNome() << endl;
 }
 
-/*
-bool Transacao :: transacoes(){
-    if(tipo == 1){//priemira posição do vetor clientes é o remetente, as demais são os destinatários
-        return acao(clientesEnvolvidos, valor);
-    } else if(tipo == 2){
-        return acao(clientesEnvolvidos[0], valor);
-    } else if(tipo == 3){       
-        return acao(clientesEnvolvidos[0], (-1) * valor);
-    }
-}*/
-       
-
+// Adiciona um cliente à lista de clientes
 void Transacao::pushClienteEnvolvido(Cliente* cli) {
     this->clientesEnvolvidos.push_back(cli);
 }
-bool Transacao :: acao(Cliente *cliente, double valor){ //Depósito e saque
+
+// Realiza a ação da transação, seja depósito ou saque, conferindo o saldo e o se o valor é válido
+bool Transacao :: acao(Cliente *cliente, double valor){
     if (valor == 0){
         cout << "Valor inválido..." << endl;
         return false;
@@ -96,12 +85,14 @@ bool Transacao :: acao(Cliente *cliente, double valor){ //Depósito e saque
     return true;
 }
 
-bool Transacao :: acao(vector <Cliente*> clientes, double valor){ //Transferência ("valor" se refere à quantia que cada cliente receberá)
+// Realiza a ação da transferência, conferindo o saldo do remetente e o valor a ser transferido
+bool Transacao :: acao(vector <Cliente*> clientes, double valor){ 
     if(valor * (clientes.size() - 1) > clientes[0]->getSaldo()){
         cout << "Saldo Insuficiente...\n";
         return false;
     }
-    for (auto it = clientes.begin() + 1; it != clientes.end(); ++it) {//primeira posição do vetor clientes é o remetente, as demais são os destinatários
+    //primeira posição do vetor clientes é o remetente, as demais são os destinatários
+    for (auto it = clientes.begin() + 1; it != clientes.end(); ++it) {
 
         (*it)->setSaldo((*it)->getSaldo() + valor);
         clientes[0]->setSaldo(clientes[0]->getSaldo() - valor);
@@ -109,4 +100,5 @@ bool Transacao :: acao(vector <Cliente*> clientes, double valor){ //Transferênc
     return true;
 }
 
+// Destrutor
 Transacao::~Transacao(){}

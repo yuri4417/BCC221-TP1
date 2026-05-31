@@ -3,17 +3,23 @@
 #include <sstream>
 #include "CartaoCredito.h"
 #include "Cliente.h"
-
+#include "cores.h"
+#include "utils.h"
 using namespace std;
-CartaoCredito::CartaoCredito(unsigned long long numero, std::string senha, double limite, double faturaAtual, bool bloqueado, Cliente* cliente) {
+
+//Construtor do cartão de crédito, recebe os dados necessários para criar um cartão e associa a um cliente
+CartaoCredito::CartaoCredito(unsigned long long numero, std::string senha, double limite, std::vector<double> fatura, bool bloqueado, Cliente* cliente, double disponivel) {
     setNumero(numero);
     setSenha(senha);
     setLimite(limite);
-    setFatura(faturaAtual);
     setBloqueado(bloqueado);
     associarCliente(cliente);
+    setDisponivel(disponivel);
+    faturas = fatura;
+    faturas.resize(MAXPARCELAS, 0.0);
 }
 
+//Getters
 unsigned long long CartaoCredito::getNumero() const{
     return numero;
 }
@@ -23,8 +29,8 @@ std::string CartaoCredito::getSenha() const{
 double CartaoCredito::getLimite() const{
     return limite;
 }
-double CartaoCredito::getFatura() const{
-    return faturaAtual;
+vector<double> CartaoCredito::getFaturas() const{
+    return faturas;
 }
 bool CartaoCredito::getBloqueado() const{
     return bloqueado;
@@ -32,8 +38,14 @@ bool CartaoCredito::getBloqueado() const{
 Cliente* CartaoCredito::getCliente() const{
     return cliente;
 }
+double CartaoCredito::getDisponivel() const{
+    return disponivel;
+}
+double CartaoCredito::getFatura(int idx) const{
+    return (idx >= MAXPARCELAS) ? -1 : faturas[idx];
+}
 
-
+//Setters
 void CartaoCredito::setNumero(unsigned long long n){
     numero = gerarNumeroCartao(n);
 }
@@ -43,8 +55,10 @@ void CartaoCredito::setSenha(std::string s){
 void CartaoCredito::setLimite(double l){
     limite = l;
 }
-void CartaoCredito::setFatura(double f){
-    faturaAtual = f;
+void CartaoCredito::setFatura(double valor, int idx){
+    if(idx > MAXPARCELAS)
+        return;
+    faturas[idx] = valor;
 }
 void CartaoCredito::setBloqueado(bool b){
     bloqueado = b;
@@ -52,7 +66,11 @@ void CartaoCredito::setBloqueado(bool b){
 void CartaoCredito::associarCliente(Cliente* c){
     cliente = c;
 }
+void CartaoCredito::setDisponivel(double d){
+    disponivel = d;
+}
 
+//Funções de operação de bloquear e desbloquear o cartao
 void CartaoCredito::bloquear(){
     setBloqueado(true);
 }
@@ -60,25 +78,42 @@ void CartaoCredito::desbloquear(){
     setBloqueado(false);
 }
 
-bool CartaoCredito::realizarCompra(double valor) {
-    if(bloqueado)
-        return false;
-        
-    if(faturaAtual + valor > limite)
-        return false;
+//Função para realizar uma compra, verifica se o cartão está bloqueado e se o valor da compra não ultrapassa o limite disponível, caso contrário, a compra é negada
+// bool CartaoCredito::realizarCompra(double valor) {
+//     if(bloqueado)
+//         return false;
+    
+//     if(valor > disponivel)
+//         return false;
 
-    faturaAtual += valor;
-    return true;
+//     return true;
+// }
+
+//Função para pagar a fatura, reduz o valor da fatura atual pelo valor pago
+void CartaoCredito::pagarFaturaAtual(double valor) {
+    cout << BOLD(GREEN("\nPagamento realizado com sucesso!\n"));
+    if(valor > faturas[0]){
+        valor = faturas[0];
+        cout << BOLD(GREEN("Valor limitado a R$ ")) << printDinheiro(faturas[0]);
+    }
+    faturas[0] -= valor;
+    disponivel += valor;
+    if(faturas[0] == 0){
+        for(int i = 0; i < MAXPARCELAS - 1; i++)
+            faturas[i] = faturas[i + 1];
+        faturas[MAXPARCELAS - 1] = 0;
+        cout << BOLD(GREEN("Sua próxima fatura é de R$ ")) << printDinheiro(faturas[0]);
+    }
+    else
+        cout << BOLD(GREEN("O valor restante da fatura é R$ ")) << printDinheiro(faturas[0]);
 }
 
-bool CartaoCredito::pagarFatura(double valor) {
-    if(valor > faturaAtual)
-        valor = faturaAtual;
-
-    faturaAtual -= valor;
-    return true;
+void CartaoCredito::insereFaturas(double valor, int parcelas){
+    double valorPorFatura = valor / parcelas;
+    for (int i = 0 ; i < parcelas; i++)
+        faturas[i] += valorPorFatura;
+    disponivel -= valor;
 }
-
 
 //função auxiliar para calcular o dígito verificador (Algoritmo de Luhn)
 int CartaoCredito::calcularDigitoVerificador(const std::string& numeroSemDigito) {
@@ -102,7 +137,9 @@ int CartaoCredito::calcularDigitoVerificador(const std::string& numeroSemDigito)
     return (10 - (soma % 10)) % 10;//o dígito verificador é definido como a "distância" da soma até a próxima dezena (%10 para o caso da distância ser 0)
 }
 
+//função para gerar o número do cartão de crédito, combinando um BIN fixo com o ID do cliente formatado e calculando o dígito verificador usando o Algoritmo de Luhn
 unsigned long long CartaoCredito::gerarNumeroCartao(size_t id) {
+
     //define um bin (bank identification number) para ser usado na geração do número de cartão
     std::string bin = "426712";
 
@@ -129,13 +166,17 @@ unsigned long long CartaoCredito::gerarNumeroCartao(size_t id) {
     return std::stoull(numeroFinalStr);
 }
 
-ostream& operator <<( std :: ostream& out , const CartaoCredito& c){//Sobrecarga
+
+//Sobrecarga do operador << para facilitar a exibição dos dados do cartão de crédito
+ostream& operator <<( std :: ostream& out , const CartaoCredito& c){
     out << "| Numero: "<< c.getNumero() << endl;
     out << "| Senha: " << c.getSenha() << endl;
     out << "| Limite: " << c.getLimite() << endl;
-    out << "| Fatura: " << c.getFatura() << endl;
+    out << "| Fatura Atual: " << c.getFatura() << endl;
     out << "| Bloqueado: " << (c.getBloqueado()? "Sim" : "Não") << endl;
-    out << "| Cliente: " << (c.getCliente())->getNome() << endl;
+    out << "| Disponivel: " << c.getDisponivel() << endl;
     return out;
 }
+
+//Destrutor
 CartaoCredito::~CartaoCredito() {}

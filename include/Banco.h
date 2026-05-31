@@ -31,6 +31,7 @@ public:
     void cartaoCredito();
     void criarCartao();
     void listarCartao();
+    void alterarStatusCartao(bool bloquear);
     void bloquear();
     void desbloquear();
     void alterarLimite();

@@ -6,7 +6,9 @@
 #include <vector>
 
 class CartaoCredito;
+
 class Cliente: public Pessoa {
+    //Atributos privados
     size_t ID;
     size_t gerenteAssociadoID;
     double remuneracao;
@@ -18,13 +20,12 @@ class Cliente: public Pessoa {
     CartaoCredito* cartao;
 
 public:
-//Construtor
+    //Construtor
     Cliente(std::string nome ="", std::string login ="", std::string senha ="", std::string dataNasc ="", std::string trabalho ="",
             size_t ID = 0,size_t gerenteAssociadoID = __INT_MAX__, double remuneracao = 0, std::string tipoConta = "", double taxaRendimento = 0,
             double saldo = 0, const std::vector<Transacao*>& transacoes = {}, CartaoCredito* cartao = nullptr);
 
-        //----------------------------------------
-//getters
+    //getters
     const std::vector<Transacao*>& getExtrato() const;
     std::string getTipoDeConta() const;
     std::vector<Transacao*> getTransacoes() const;
@@ -35,8 +36,7 @@ public:
     size_t getGerenteAssociadoID() const;
     CartaoCredito* getCartao() const;
     
-//----------------------------------------
-//setters
+    //setters
     void setTransacao(const std::vector<Transacao*>&);
     void setTipoDeConta(std::string);
     void setSaldo(double);
@@ -45,16 +45,20 @@ public:
     void setID(size_t);
     void setGerenteAssociadoID(size_t);
     void setCartao(CartaoCredito* c);
-    void exibirDados() override;
-    void rendimento();
 
-    virtual bool cadastro();
-    void criarCartao();
-
-//----------------------------------------
-    friend std::ostream& operator << (std::ostream&, const Cliente&);
-    friend std::istream& operator >> (std::istream&, Cliente&);
+    // Metodos 
     void pushTransacao(Transacao* transacao);
+    void rendimento();
+    void criarCartao();
+    virtual bool cadastro();
+    
+    //Sobrescrita do método exibirDados da classe Pessoa
+    void exibirDados() override;
+
+    //Sobrecarga de operadores <<
+    friend std::ostream& operator << (std::ostream&, const Cliente&);
+    
+    //Destrutor
     virtual ~Cliente();
 };
 

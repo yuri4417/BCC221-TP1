@@ -3,10 +3,11 @@
 
 #include <string>
 #include <vector>
-
+// Forward declaration para evitar dependências circulares
 class Cliente;
 
 class Transacao{
+    //Atributos privados
     int tipo; // 1 -> transferência; 2 -> depósito; 3 -> saque
     double valor;
     std::string data;
@@ -29,13 +30,16 @@ public:
     void setData(std::string);
     void setHorario(std::string);
     void setClientes(std::vector <Cliente*> vecCliente);
+    
+    // Métodos para exibir
     void exibirTransacao();
-
+    
     //Transações
-    //bool transacoes();
     void pushClienteEnvolvido(Cliente* cli);
     bool acao(Cliente* cliente, double valor);
     bool acao(std::vector<Cliente*> b, double valor);
-    ~Transacao();
+
+    //Destrutor
+    virtual ~Transacao();
 };
 #endif

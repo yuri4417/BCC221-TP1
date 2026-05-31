@@ -5,7 +5,7 @@
 #include <string>   
 #include <vector>   
 
-#include "menu.h"
+#include "Banco.h"
 #include "Cliente.h"
 #include "Gerente.h"
 #include "Pessoa.h"
@@ -21,7 +21,7 @@ Banco::Banco(int qtdC, int qtdG):
     }
 
 void Banco::run() {
-    while (true) {
+    while (true) {//imprime as opções de menu
         clearTerminal();
         cout << endl << BOLD(MAGENTA("======= SISTEMA DE GERENCIAMENTO DE BANCO =======")) << endl;
         cout << BOLD(GREEN("1. Cadastrar cliente")) << endl;
@@ -109,7 +109,7 @@ void Banco::cadastrarCliente() {
     size_t id;
     Gerente *ptrGerente;
     while (1) {
-        if (!lerEntrada(id, BOLD("Escolha o ID do gerente"), ":")) {
+        if (!lerEntrada(id, BOLD("Escolha o ID do gerente"), ": ")) {
             delete novoCliente;
             return;
         }
@@ -140,9 +140,7 @@ void Banco::cadastrarGerente() {
     novoGerente->setID(qtdGerentes + 1);
     vecGerente.push_back(novoGerente);
     qtdGerentes++;
-    cout << " ========== Gerente cadastrado com sucesso! ==========" << endl;
-
-    cout << BOLD(YELLOW()) << endl;
+    cout << BOLD(GREEN(" ========== Gerente cadastrado com sucesso! ==========")) << endl;
     confirmar(BOLD(GREEN("Pressione qualquer tecla para voltar para o menu...")));
 }
 
@@ -169,7 +167,7 @@ void Banco::criarTransacao() {
     cout << "3. Saque" << endl;
     cout << endl << "==================================================" << endl;
     while(1) {
-        if (!lerEntrada(tipoTransacao, "Escolha uma opção: ")) {
+        if (!lerEntrada(tipoTransacao, "Escolha uma opção ", ": ")) {
             cancelaTransacao(novaTransacao);
             return;
         }
@@ -179,14 +177,14 @@ void Banco::criarTransacao() {
     }
 
     // Fazer verificação de alguma forma
-    if (!lerEntrada(temp, "Informe a data: "))  {
+    if (!lerEntrada(temp, "Informe a data", ": "))  {
         cancelaTransacao(novaTransacao);
         return;
     }
     novaTransacao->setData(temp);
 
 
-    if (!lerEntrada(temp, "Informe o horário: ")) {
+    if (!lerEntrada(temp, "Informe o horário", ": ")) {
         cancelaTransacao(novaTransacao);
         return;
     }
@@ -196,7 +194,7 @@ void Banco::criarTransacao() {
     showVector(vecCliente, "====== Clientes Cadastrados ======");
     Cliente *ptrRemetente;
     while(1) {
-        if (!lerEntrada(id, "Selecione o ID do cliente (remetente) para realizar a ação: ")) {
+        if (!lerEntrada(id, "Selecione o ID do cliente (remetente) para realizar a ação ",": ")) {
             cancelaTransacao(novaTransacao);
             return;
         }
@@ -214,16 +212,21 @@ void Banco::criarTransacao() {
             novaTransacao->setTipo(1);
             novaTransacao->pushClienteEnvolvido(ptrRemetente);
             while(1) {
-                if (!lerEntrada(quant, "Informe a quantidade de destinatários para o pagamento: ")) {
+                if (!lerEntrada(quant, "Informe a quantidade de destinatários para o pagamento ", ": ")) {
                     cancelaTransacao(novaTransacao);
                     return;
                 }
                 if (quant >= 1 && quant < qtdClientes)
                     break;
-                cout << BOLD(YELLOW("Quantidade inválida, digite novamente."));
+                cout << BOLD(YELLOW("Quantidade inválida, digite novamente.")) << endl;
             }
 
-            if (!lerEntrada(valor, "Informe o valor que será transferido para cada destinatário")) {
+            if (!lerEntrada(valor, "Informe o valor que será transferido para cada destinatário ", ": ")) {
+                cancelaTransacao(novaTransacao);
+                return;
+            }
+            if(valor <= 0) {
+                cout << "Valor inválido\n";
                 cancelaTransacao(novaTransacao);
                 return;
             }
@@ -231,13 +234,14 @@ void Banco::criarTransacao() {
             // Lê destinatário(s) e os adiciona no vetor clientesEnvolvidos
             for(int i = 0; i < quant; i++){
                 do{
-                    if (!lerEntrada(idDestinatario, "Informe o ID do destinatário: ")) {
+                    if (!lerEntrada(idDestinatario, "Informe o ID do destinatário ", ": ")) {
                         cancelaTransacao(novaTransacao);
                         return;
                     }
-                    if(id < 1 || idDestinatario > vecCliente.size())
+                    if(id < 1 || idDestinatario > vecCliente.size() || idDestinatario == id)
                         cout << endl << "ID inválido. Digite novamente." << endl;
-                } while(idDestinatario < 1 || idDestinatario > vecCliente.size());
+                    
+                } while(idDestinatario < 1 || idDestinatario > vecCliente.size() || idDestinatario == id);
                 
                 Cliente *ptrDestinatario = pesquisaID(vecCliente, idDestinatario);
                 if(ptrDestinatario)
@@ -245,7 +249,7 @@ void Banco::criarTransacao() {
             }
             
             for(int i=4 ;i>0; i--) {    
-                if (!lerEntrada(verify, "Digite a sua senha para finalizar a transacao: ")) {
+                if (!lerEntrada(verify, "Digite a sua senha para finalizar a transacao ")) {
                     cancelaTransacao(novaTransacao);
                     return;
                 }            
@@ -263,7 +267,7 @@ void Banco::criarTransacao() {
             }
             cout << endl;
             while (!novaTransacao->acao(novaTransacao->getClientes(), valor)) {
-                if (!lerEntrada(valor, "\nInsira outro valor (ou digite 0 para cancelar): ")) {
+                if (!lerEntrada(valor, "\nInsira outro valor ", ": R$ ")) {
                     cancelaTransacao(novaTransacao);
                     return;
                 }
@@ -287,7 +291,7 @@ void Banco::criarTransacao() {
                 return;
             }
             for(int i=4 ;i>0; i--) {        
-                if (!lerEntrada(verify,"Digite a sua senha para finalizar a transacao", ":")) {
+                if (!lerEntrada(verify,"Digite a sua senha para finalizar a transacao", ": ")) {
                     cancelaTransacao(novaTransacao);
                     return;
                 }        
@@ -327,7 +331,7 @@ void Banco::criarTransacao() {
                 cout << "Valor invalido. Digite novamente: ";
             }
             for(int i = 4; i > 0; i--){
-                if (!lerEntrada(verify, "Digite a sua senha para finalizar a transacao: ")) {
+                if (!lerEntrada(verify, "Digite a sua senha para finalizar a transacao ", ": ")) {
                     cancelaTransacao(novaTransacao);
                     return;
                 }
@@ -366,7 +370,7 @@ void Banco::exibirExtrato() {
     for(auto clientes: vecCliente)
         cout << "ID: " << clientes->getID() << " | Nome: " << clientes->getNome() << endl;
     while (true){
-        if (!lerEntrada(id, "Informe o ID do cliente para exibir o extrato"))
+        if (!lerEntrada(id, "Informe o ID do cliente para exibir o extrato ", ": "))
             return;
         if (id >= 1 && id <= vecCliente.size())
             break;
@@ -376,17 +380,27 @@ void Banco::exibirExtrato() {
     Cliente* clienteExtrato = pesquisaID(vecCliente, id);
     cout << "\n===== EXTRATO DE " << clienteExtrato->getNome() << " =====\n";
     for(auto transacao : clienteExtrato->getTransacoes()) {
+        size_t idRemetente = transacao->getClientes()[0]->getID();
+        string nomeRemetente = transacao->getClientes()[0]->getNome();
+
         cout << "Data: " << transacao->getData() << endl;
         cout << "Horario: " << transacao->getHorario() << endl;
         cout << "Tipo: " << (transacao->getTipo() == 1 ? "Transferência" : (transacao->getTipo() == 2 ? "Depósito" : "Saque")) << endl;
         cout << "Valor: R$ " << transacao->getValor() << endl;
+
         if(transacao->getTipo() == 1) {
-            cout << "Transação para o(s) Cliente(s): " << endl;
+            if(idRemetente == clienteExtrato->getID())
+                cout << "Transação para o(s) Cliente(s): " << endl;
+            else{
+                cout << "Transação recebida de " << nomeRemetente << endl;
+                continue;
+            }
             for(auto cliente : transacao->getClientes())
                 if(cliente->getID() != id)
                     cout << "ID: " << cliente->getID() << " | Nome: " << cliente->getNome() << endl;
         }
         cout << endl;
+        cout << "=================\n";
     }
     confirmar();
 }
@@ -395,31 +409,36 @@ void Banco::associarGerenteCliente() {
     clearTerminal();
     cout << BOLD(GREEN("===== Associando um Gerente a Cliente =====\n")) << endl;
     int qtd;
-    
-    for (auto gerente : vecGerente) 
-        cout << gerente->getID() << " | " << gerente->getNome() << endl;
-    cout << BOLD(YELLOW("Selecione um gerente para associar clientes\n"));
+    if(qtdGerentes == 0 || qtdClientes == 0) {
+        cout << BOLD(RED("Erro: Cadastre clientes e gerentes antes de associar!")) << endl;
+        confirmar(BOLD(GREEN("Pressione qualquer tecla para voltar ao menu...")));
+        return;
+    }
+    showVector(vecGerente, BOLD(GREEN("====== Selecione o ID do gerente para associar ao cliente ======")));
     size_t ID;  
     
+    Gerente *novoGerente = nullptr;
+    
     while (1) {
-        if (!lerEntrada(ID, BOLD(YELLOW("Escolha o ID do gerente")), ":"))
+        if (!lerEntrada(ID, BOLD(YELLOW("Escolha o ID do gerente")), ": "))
             return;
-        if (ID >= 1 && ID <= vecGerente.size())
-            break;
-        cout << BOLD(RED("ERRO: ID não encontrado. Tente novamente: "));
+        novoGerente = pesquisaID(vecGerente, ID); 
+        if (novoGerente != nullptr) break; 
+        
+        cout << BOLD(RED("ERRO: ID não encontrado. Tente novamente: \n"));
     }
-
-    Gerente *novoGerente;
-    for (auto g : vecGerente) 
-        if (g->getID() == ID)
-            novoGerente = g;
-
+    int clientesDisponiveis = vecCliente.size() - (int)novoGerente->getClientes().size();
+    if(clientesDisponiveis == 0) {
+        cout << BOLD(YELLOW("O gerente selecionado já possui todos os clientes associados!\n"));
+        confirmar(BOLD(GREEN("Pressione qualquer tecla para voltar ao menu...")));
+        return;
+    }
     while(1) {
-        if (!lerEntrada(qtd,"Digite quantos clientes deseja vincular", ":"))
+        if (!lerEntrada(qtd,"Digite quantos clientes deseja vincular", ": "))
             return;
-        if (qtd >= 1 && qtd <= qtdClientes)
+        if (qtd >= 1 && qtd <= clientesDisponiveis)
             break;
-        cout << BOLD(RED("ERRO: Quantidade inválida!")); 
+        cout << BOLD(RED("ERRO: Quantidade inválida!\n")) << BOLD(GREEN("Quantidade disponível: \n")) << clientesDisponiveis << endl;
     }
 
     cout << BOLD(GREEN("=== CLIENTES DISPONIVEIS PARA ALTERAR ===\n"));
@@ -430,15 +449,28 @@ void Banco::associarGerenteCliente() {
     
     for(int i = 0; i < qtd; i++) {
         size_t idCliente;
-        if (!lerEntrada(idCliente, "Digite o ID do cliente", ":"))
+        size_t idGerenteAntigo;
+        if (!lerEntrada(idCliente, "Digite o ID do cliente", ": "))
             return;
         Cliente *ptr = pesquisaID(vecCliente, idCliente);
         if (ptr) {
+           if (ptr->getGerenteAssociadoID() == novoGerente->getID()) {
+                cout << BOLD(YELLOW("O cliente ")) << ptr->getNome() 
+                << BOLD(YELLOW(" já está associado a este gerente. Nenhuma alteração feita.")) << endl;
+                i--;    
+                continue; 
+             }
             if (ptr->getGerenteAssociadoID() != 0){
-                // Desassociar 
+                // Desassocia cliente da lista de clientes associados do gerente antigo
+                idGerenteAntigo = ptr->getGerenteAssociadoID();
+                Gerente *ptrGerenteAntigo = pesquisaID(vecGerente, idGerenteAntigo);
+                ptrGerenteAntigo->removeCliente(ptr->getID());
             }
             ptr->setGerenteAssociadoID(novoGerente->getID());
-            novoGerente->setCliente(ptr);
+            cout << BOLD(GREEN("Gerente ")) << BOLD(CYAN(novoGerente->getNome())) << BOLD(GREEN(" associado ao cliente ")) << BOLD(CYAN(ptr->getNome())) << BOLD(GREEN(" com sucesso!\n"));
+            confirmar();
+            if(!novoGerente->setCliente(ptr))
+                i--;
         }
         else {
             cout<< BOLD(YELLOW("Cliente nao encontrado. Tente novamente.")) << endl;
@@ -454,7 +486,7 @@ void Banco::listarClientes(){
     cout << BOLD(GREEN("===== Iniciando Listagem de Cliente =====")) << endl;
     for(auto clientes: vecCliente)
         cout << *clientes;
-    if (!lerEntrada(nome, "Informe o nome do Cliente: "))
+    if (!lerEntrada(nome, "Informe o nome do Cliente ",": "))
         return;
 
     bool encontrou = false;
@@ -477,7 +509,7 @@ void Banco::listarGerentes() {
     cout << BOLD(GREEN("===== Iniciando Listagem de Gerente =====")) << endl;
     for(auto gerentes: vecGerente)
         cout << *gerentes;
-    if (!lerEntrada(nome, "Informe o nome do Gerente: "))
+    if (!lerEntrada(nome, "Informe o nome do Gerente "))
         return;
     bool encontrou = false;
     for(auto gerente : vecGerente) {
@@ -493,13 +525,13 @@ void Banco::listarGerentes() {
     confirmar(BOLD(GREEN("Pressione qualquer tecla para voltar ao menu...")));
 }
 
-void Banco :: listarCartao(){
+void Banco :: listarCartao(){   
     size_t id;
     clearTerminal();
     cout << BOLD(GREEN("===== Iniciando Listagem do Cartão de Cliente =====")) << endl;
     for(auto clientes: vecCliente)
         cout << *clientes;
-    if (!lerEntrada(id, BOLD("Informe o id do Cliente"), ":"))
+    if (!lerEntrada(id, BOLD("Informe o id do Cliente"), ": "))
         return;
 
     bool encontrou = false;
@@ -507,6 +539,7 @@ void Banco :: listarCartao(){
         if(cliente->getID() == id) {
             if(cliente->getCartao() != nullptr){
                 cout << BOLD(GREEN("\n===== CARTAO ENCONTRADO =====\n"));
+                cout << *cliente;
                 cout << *(cliente->getCartao());
                 encontrou = true;
                 break;
@@ -522,11 +555,10 @@ void Banco :: listarCartao(){
     confirmar(BOLD(GREEN("Pressione qualquer tecla para voltar ao menu...")));
 }
 
-
 void Banco::carregaDados() {
     // Carregamento dos clientes
-    // nome,login,senha,dataNasc,trabalho,id,gerenteID,remuneracao,tipoConta,taxaRendimento,saldo
-    fstream clientes;
+    // nome,login,senha,dataNasc,trabalho,id,gerenteID,remuneracao,tipoConta,taxaRendimento,saldo,{numCartao;senhaCartao;limite;bloqueado;[fatura0:fatura1:...]}
+    fstream clientes;   
     string linha;
     clientes.open("./data/clientes.csv", ios::in);
     if (!clientes){
@@ -544,7 +576,7 @@ void Banco::carregaDados() {
         while (getline(ss, campo, ',')){
             campos.push_back(campo);
         }
-        if (campos.size() < 11) 
+        if (campos.size() < 12) 
             continue;
 
         Cliente *pCliente = new(nothrow) Cliente;
@@ -562,9 +594,58 @@ void Banco::carregaDados() {
         pCliente->setRendimento(stod(campos[9]));
         pCliente->setSaldo(stod(campos[10]));
 
+        // Lendo cartao
+        vector<string> dadosCartao;
+        string dados = campos[11];
+        size_t ini = dados.find('{');
+        size_t end = dados.find('}');
+        if (ini != string::npos && end != string::npos) {
+            string listaPartes = dados.substr(ini + 1, end - ini - 1);
+            stringstream ssParts(listaPartes);
+            string dadoCartao;
+            while (getline(ssParts, dadoCartao, ';')) 
+                dadosCartao.push_back(dadoCartao);
+            
+            if (dadosCartao.size() >= 4) {
+                CartaoCredito *novoCartao = new(nothrow) CartaoCredito;
+                if (!novoCartao)
+                    return;
+
+                novoCartao->setNumero(stoull(dadosCartao[0]));
+                novoCartao->setSenha(dadosCartao[1]);
+                novoCartao->setLimite(stod(dadosCartao[2]));
+                if(stoi(dadosCartao[3]) == 1)
+                novoCartao->setBloqueado(true);
+                else
+                    novoCartao->setBloqueado(false);
+
+                novoCartao->setDisponivel(stod(dadosCartao[4]));
+                
+                if (dadosCartao.size() > 5) {
+                    string faturaBloco = dadosCartao[5];
+                    size_t ini2 = faturaBloco.find('[');
+                    size_t end2 = faturaBloco.find(']');
+                    if (ini2 != string::npos && end2 != string::npos) {
+                        string listaFaturas = faturaBloco.substr(ini2 + 1, end2 - ini2 - 1);
+                        stringstream ssFat(listaFaturas);
+                        string fat;
+                        int i = 0;
+                        while (getline(ssFat, fat, ':')) 
+                            if (!fat.empty()){
+                                novoCartao->setFatura(stod(fat), i);
+                                i++;
+                            }
+                    }
+                }
+                pCliente->setCartao(novoCartao);   
+            }
+        }
         vecCliente.push_back(pCliente);
         qtdClientes++;
     }
+    clientes.close();
+
+
 
     // Carregamento das transações
     // tipo,valor,data,horario,[id1;id2;id3;id4]
@@ -615,7 +696,6 @@ void Banco::carregaDados() {
         }
         vecTransacao.push_back(t);    
     }
-    clientes.close();
     for (auto pTransacao : vecTransacao) {
         for (auto pCliente : pTransacao->getClientes()) {
             if (pCliente)
@@ -665,6 +745,7 @@ void Banco::carregaDados() {
     }
     gerentes.close();
 }
+
 void Banco::salvaDados() {
     clearTerminal();
     // Salvamento dos clientes
@@ -674,15 +755,34 @@ void Banco::salvaDados() {
         cout << BOLD(RED("Erro ao abrir o arquivo. Tente novamente.\n"));
         return;
     }
-    clientes << "nome,login,senha,dataNasc,trabalho,ID,gerenteID,remuneracao,tipoConta,taxaRendimento,saldo\n";
-    // nome,login,senha,dataNasc,trabalho,id,gerenteID,remuneracao,tipoConta,taxaRendimento,saldo
+    clientes << "nome,login,senha,dataNasc,trabalho,ID,gerenteID,remuneracao,tipoConta,taxaRendimento,saldo,cartao\n";
+    // nome,login,senha,dataNasc,trabalho,id,gerenteID,remuneracao,tipoConta,taxaRendimento,saldo,{numCartao;senhaCartao;limite;bloqueado;[fatura0:fatura1:...]}
     for (auto ptrCliente : vecCliente) {
         clientes <<  ptrCliente->getNome() << "," << ptrCliente->getLogin() << "," <<
             ptrCliente->getSenha() << "," << ptrCliente->getDataNasc() << "," <<
             ptrCliente->getTrabalho() << "," << ptrCliente->getID() << "," <<
             ptrCliente->getGerenteAssociadoID() << "," << ptrCliente->getRemuneracao() << "," <<
             ptrCliente->getTipoDeConta() << "," << ptrCliente->getRendimento() << "," <<
-            ptrCliente->getSaldo() << "\n";
+            ptrCliente->getSaldo() << ",";
+        
+        // Dados do cartão
+        clientes << "{";
+        if(ptrCliente->getCartao()){
+            clientes << ptrCliente->getCartao()->getNumero() << ";"
+                     << ptrCliente->getCartao()->getSenha() << ";"
+                     << ptrCliente->getCartao()->getLimite() << ";"
+                     << ((ptrCliente->getCartao()->getBloqueado()) ? "1" : "0") << ";"
+                     << ptrCliente->getCartao()->getDisponivel() <<  ";";
+            
+            clientes << "[";
+            for(int i = 0; i < MAXPARCELAS; i++){
+                clientes << ptrCliente->getCartao()->getFatura(i);
+                if (i < MAXPARCELAS - 1)
+                    clientes << ":";
+            }
+            clientes << "]";
+        }
+        clientes << "}\n";
     }
     clientes.close();
 
@@ -737,11 +837,16 @@ void Banco::salvaDados() {
     confirmar(BOLD(GREEN("Pressione ENTER para prosseguir ao menu...\n")));
 }
 
+//simula um "ciclo" de rendimento da poupanca 
 void Banco::cadernetaDePoupanca() {
+
     clearTerminal();
     cout << " ===== Calculando rendimento da caderneta de poupança =====" << endl << endl;
+
+
     bool rendimento = false;
     for(auto cliente: vecCliente) {
+        //realiza o rendimento apenas para os clientes que possuem a conta do tipo poupanca
         if(cliente->getTipoDeConta() == "Poupanca") {
             double valorRend = cliente->getSaldo() * (cliente->getRendimento()/100);
             cout << "Valor do Rendimento R$:" << valorRend << " | " "Cliente:" 
@@ -750,14 +855,17 @@ void Banco::cadernetaDePoupanca() {
             rendimento = true;
         }
     }
+    //se ninguem teve rendimento, imprime que nenhum possui poupanca
     if(!rendimento)
         cout << "Nenhum cliente possui conta poupança!" << endl;
     cout << endl;
+
     confirmar("Pressione ENTER para retornar ao menu...");
 }
 
 void Banco::cartaoCredito(){
 
+    //imprime o menu das operacoes envolvendo o cartao de credito
     while(1) {
         clearTerminal();
         int opt;
@@ -771,7 +879,7 @@ void Banco::cartaoCredito(){
         cout << "7. Desbloquear cartão" << endl;
         cout << "8. Voltar ao menu principal" << endl;
         cout << endl << "==================================================" << endl;
-        if (!lerEntrada(opt, "Escolha uma opção", ":"))
+        if (!lerEntrada(opt, "Escolha uma opção ", ": "))
                 return;
 
         switch(opt){
@@ -808,36 +916,80 @@ void Banco::cartaoCredito(){
 }
 
 void Banco::criarCartao() {
+
+    //imprime cabecalho
     clearTerminal();
     cout << " ===== Criando Cartão de Crédito =====" << endl;
 
-    showVector(vecCliente, "");
+    //mostra todos os gerentes cadastrados no banco
+    showVector(vecGerente, "");
 
-    size_t id;
-    
+    //ids para busca e senha para confirmacao
+    size_t idGerente, idCliente;
+    string senhaGerente;
+
+
+    //loop responsavel pela leitura valida do id do gerente
     while(1) {
-        if (!lerEntrada(id, "Informe o ID do cliente para criar um cartão de crédito"))
+        if (!lerEntrada(idGerente, "Informe o ID do gerente responsável pela criação do cartão ", ": "))
             return;
-        if (id >= 1 && id <= vecCliente.size())
+        if (idGerente >= 1 && idGerente <= vecGerente.size())
             break;
         cout << "ID inválido. Digite novamente: ";
     }
-    Cliente *ptrCliente = pesquisaID(vecCliente, id);
+
+
+    //busca gerente responsavel pela criacao do cartao
+    Gerente* GerenteResponsavel = pesquisaID(vecGerente, idGerente);
+    Cliente *ptrCliente = nullptr;
+
+
+    //mostra clientes associados ao gerente
+    cout << " ===== Clientes Associados =====" << endl;
+    auto vec = GerenteResponsavel->getClientes();
+    showVector(vec, "");
+
+
+    //loop para escolher um cliente (dentre os associados ao gerente)
+    while(1) {
+        if (!lerEntrada(idCliente, "Informe o ID do cliente para criar um cartão de crédito ", ": "))
+            return;
+        ptrCliente = pesquisaID(vecCliente, idCliente);
+        if (ptrCliente != nullptr)
+            break;
+        cout << "Cliente não encontrado\n";
+    }
+    
+    //cria um novo cartão
     CartaoCredito *novoCartao = new(nothrow) CartaoCredito;
     if (!novoCartao)
         return;
+
+    //limite inicial eh igual a 60% da renda do cliente
     double limite = 0.6 * ptrCliente->getRemuneracao();
-    cout << BOLD(GREEN("Limite inicial de R$ " << limite << "!\n"));
+    cout << BOLD(GREEN("Limite inicial de R$ ")) << printDinheiro(limite);
+
+    //senha para o cartao
     std::string senha;
     if (!lerEntrada(senha, "Digite a senha para o cartão", ":"))
         return;
 
+
+    //exige senha do gerente para confirmacao do processo 
+    while(1) {
+        if (!lerEntrada(senhaGerente, "Digite a senha do gerente responsável para finalizar ", ": "))
+            return;
+        if (GerenteResponsavel->getSenha() == senhaGerente)
+            break;
+        cout << "Senha Incorreta\n";
+    }
+
+    //preenche cartao com informacoes adquiridas
     novoCartao->setLimite(limite);
     novoCartao->setSenha(senha);
-    novoCartao->setFatura(0);
-    novoCartao->setBloqueado(false);
-    
-    novoCartao->setNumero(id);
+    novoCartao->setNumero(idCliente);
+    novoCartao->associarCliente(ptrCliente);
+    novoCartao->setDisponivel(limite);
     
     cout << endl;
     ptrCliente->setCartao(novoCartao);
@@ -845,105 +997,79 @@ void Banco::criarCartao() {
     confirmar("Pressione ENTER para retornar ao menu...");
 }
 
-void Banco::bloquear(){
+void Banco::alterarStatusCartao(bool bloquear) {
+    // imprime cabecalho dinamico
     clearTerminal();
+    if (bloquear) {
+        cout << "===== BLOQUEAR CARTAO =====\n";
+    } else {
+        cout << "===== DESBLOQUEAR CARTAO =====\n";
+    }
 
-    cout << "===== BLOQUEAR CARTAO =====\n";
-
+    // mostra os clientes cadastrados no banco
     showVector(vecCliente, "");
 
+    // realiza a leitura do id
     size_t id;
-
-    if (!lerEntrada(id, "Informe o ID do cliente"))
+    if (!lerEntrada(id, "Informe o ID do cliente", ": "))
         return;
 
+    // busca o cliente desejado pelo id
     Cliente *ptrCliente = pesquisaID(vecCliente, id);
-
     if (!ptrCliente) {
         cout << BOLD(RED("Cliente nao encontrado!\n"));
         confirmar();
         return;
     }
 
+    // pega o cartao do cliente desejado
     CartaoCredito *cartao = ptrCliente->getCartao();
-
     if (!cartao) {
         cout << "Este cliente nao possui cartao de credito.\n";
         confirmar();
         return;
     }
 
+    // verifica a senha (padronizado com loop para ambas as acoes)
     string senha;
-
-    if (!lerEntrada(senha, "Digite a senha do Cartão"))
-        return;
-
-    if (senha != ptrCliente->getCartao()->getSenha()) {
+    while (true) {
+        if (!lerEntrada(senha, "Digite a senha do Cartão", ": "))
+            return;
+        
+        if (senha == cartao->getSenha()) 
+            break;
+        
         cout << "Senha incorreta!\n";
-        confirmar();
-        return;
     }
 
-    if (cartao->getBloqueado()) {
-        cout << "Cartao ja esta bloqueado.\n";
-        confirmar();
-        return;
+    // verifica o status atual e aplica a mudanca baseada no parametro
+    if (bloquear) {
+        if (cartao->getBloqueado()) {
+            cout << "Cartao ja esta bloqueado.\n";
+            confirmar();
+            return;
+        }
+        cartao->setBloqueado(true);
+        cout << "Cartao bloqueado com sucesso!\n";
+    } else {
+        if (!cartao->getBloqueado()) {
+            cout << "Cartao ja esta desbloqueado.\n";
+            confirmar();
+            return;
+        }
+        cartao->setBloqueado(false);
+        cout << "Cartao desbloqueado com sucesso!\n";
     }
 
-    cartao->setBloqueado(true);
-
-    cout << "Cartao bloqueado com sucesso!\n";
     confirmar();
 }
+
+//realiza o mesmo processo, alterando apenas o valor de setBloqueado ao fim
+void Banco::bloquear(){
+    alterarStatusCartao(true);
+}
 void Banco::desbloquear(){
-    clearTerminal();
-
-    cout << "===== DESBLOQUEAR CARTAO =====\n";
-
-    showVector(vecCliente, "");
-
-    size_t id;
-
-    if (!lerEntrada(id, "Informe o ID do cliente"))
-        return;
-
-    Cliente *ptrCliente = pesquisaID(vecCliente, id);
-
-    if (!ptrCliente) {
-        cout << BOLD(RED("Cliente nao encontrado!\n"));
-        confirmar();
-        return;
-    }
-
-    CartaoCredito *cartao = ptrCliente->getCartao();
-
-    if (!cartao) {
-        cout << "Este cliente nao possui cartao de credito.\n";
-        confirmar();
-        return;
-    }
-
-    string senha;
-
-    if (!lerEntrada(senha, "Digite a senha do Cartão"))
-        return;
-
-    if (senha != ptrCliente->getCartao()->getSenha()) {
-        cout << "Senha incorreta!\n";
-        confirmar();
-        return;
-    }
-    
-    if (!cartao->getBloqueado()) {
-        cout << "Cartao ja esta desbloqueado.\n";
-        confirmar();
-        return;
-    }
-
-    cartao->setBloqueado(false);
-
-    cout << "Cartao desbloqueado com sucesso!\n";
-    confirmar();    
+    alterarStatusCartao(false);
 }
 
 void Banco::alterarLimite() {
@@ -951,29 +1077,24 @@ void Banco::alterarLimite() {
 
     cout << "===== ALTERAR LIMITE DO CARTAO =====\n";
 
+    //mostra os clientes 
     showVector(vecCliente, "");
-
     size_t id;
-
-    if (!lerEntrada(id, "Informe o ID do cliente"))
+    if (!lerEntrada(id, "Informe o ID do cliente", ": "))
         return;
-
     Cliente *ptrCliente = pesquisaID(vecCliente, id);
-
     if (!ptrCliente) {
         cout << BOLD(RED("Cliente nao encontrado!\n"));
         confirmar();
-        return;
+        return;    
     }
 
     CartaoCredito *cartao = ptrCliente->getCartao();
-
     if (!cartao) {
         cout << "Cliente nao possui cartao de credito.\n";
         confirmar();
         return;
     }
-    
     if(cartao->getBloqueado()) {
         cout << "Cartao esta bloqueado. Desbloqueie para alterar o limite.\n";
         confirmar();
@@ -981,10 +1102,8 @@ void Banco::alterarLimite() {
     }
 
     string senha;
-
-    if (!lerEntrada(senha, "Digite a senha do cliente"))
+    if (!lerEntrada(senha, "Digite a senha do cliente", ": "))
         return;
-
     if (senha != ptrCliente->getCartao()->getSenha()) {
         cout << "Senha incorreta!\n";
         confirmar();
@@ -994,17 +1113,16 @@ void Banco::alterarLimite() {
     cout << "Limite atual: R$ " << cartao->getLimite() << endl;
     double limiteAntigo = cartao->getLimite();
     double novoLimite;
-
     while (true) {
         if (!lerEntrada(novoLimite, "Digite o novo limite", ": R$ "))
             return;
-
         if (novoLimite >= 0)
             break;
 
         cout << "Limite invalido!\n";
     }
 
+    cartao->setDisponivel(cartao->getDisponivel() + novoLimite - cartao->getLimite());
     cartao->setLimite(novoLimite);
 
     cout << "\nLimite alterado com sucesso!\n";
@@ -1020,7 +1138,7 @@ void Banco::pagamentoParcelado() {
     size_t id;
 
     showVector(vecCliente, "");
-    if (!lerEntrada(id, "Informe o ID do cliente"))
+    if (!lerEntrada(id, "Informe o ID do cliente", ": "))
         return;
 
     Cliente *cliente = pesquisaID(vecCliente, id);
@@ -1050,41 +1168,37 @@ void Banco::pagamentoParcelado() {
 
     if (!lerEntrada(valor, "Valor da compra", ": R$ "))
         return;
-
-    if (!lerEntrada(parcelas, "Quantidade de parcelas"))
-        return;
-
-    if (valor <= 0 || parcelas <= 0) {
-        cout << "Valores invalidos.\n";
-        confirmar();
-        return;
-    }
-
-    double disponivel = cartao->getLimite() - cartao->getFatura();
-
-    if (valor > disponivel) {
+        
+    if(valor <= 0)
+        cout << "Valor invalido.";
+    if (valor > cartao->getDisponivel()) {
         cout << "Limite insuficiente.\n";
         confirmar();
         return;
     }
 
-
-    string senha;
-
-    if (!lerEntrada(senha, "Digite a senha do Cartão"))
+    if (!lerEntrada(parcelas, "Quantidade de parcelas", ": "))
         return;
 
-    if (senha != cliente->getCartao()->getSenha()) {
+    if (parcelas <= 0 || parcelas > MAXPARCELAS) {
+        cout << "Quantidade de parcelas invalida.\n";
+        confirmar();
+        return;
+    }
+    string senha;
+    if (!lerEntrada(senha, "Digite a senha do Cartão", ": "))
+        return;
+
+    if (senha != cartao->getSenha()) {
         cout << "Senha incorreta!\n";
         confirmar();
         return;
     }
-    cartao->setFatura(cartao->getFatura() + valor);
 
+    cartao->insereFaturas(valor, parcelas);
     cout << "\nCompra aprovada!\n";
     cout << "Valor total: R$ " << valor << endl;
     cout << "Parcelas: " << parcelas << "x de R$ " << valor / parcelas << endl;
-
     confirmar();
 }
 
@@ -1094,11 +1208,10 @@ void Banco::pagarFatura() {
     size_t id;
     showVector(vecCliente, "");
 
-    if (!lerEntrada(id, "Informe o ID do cliente"))
+    if (!lerEntrada(id, "Informe o ID do cliente", ": "))
         return;
 
     Cliente *cliente = pesquisaID(vecCliente, id);
-
     if (!cliente) {
         cout << (BOLD(RED("Cliente nao encontrado.\n")));
         confirmar();
@@ -1106,7 +1219,6 @@ void Banco::pagarFatura() {
     }
 
     CartaoCredito *cartao = cliente->getCartao();
-
     if (!cartao) {
         cout << "Cliente nao possui cartao.\n";
         confirmar();
@@ -1120,7 +1232,7 @@ void Banco::pagarFatura() {
     while(1){
         if (!lerEntrada(pagamento, "Valor para pagamento",": R$ "))
             return;
-        if(pagamento >= 0 && pagamento <= cartao->getFatura())
+        if(pagamento >= 0)
             break;
         cout << BOLD(YELLOW("ERRO: Valor de pagamento maior que o da fatura atual.\n")); 
     }
@@ -1136,9 +1248,8 @@ void Banco::pagarFatura() {
         confirmar();
         return;
     }
-
     string senha;
-    if (!lerEntrada(senha, BOLD("Digite a senha do Cartão")))
+    if (!lerEntrada(senha, BOLD("Digite a senha do Cartão"), ": "))
         return;
 
     if (senha != cliente->getCartao()->getSenha()) {
@@ -1147,13 +1258,7 @@ void Banco::pagarFatura() {
         return;
     }
 
-    cliente->setSaldo(cliente->getSaldo() - pagamento);
-
-    double novaFatura = cartao->getFatura() - pagamento;
-    cartao->setFatura(novaFatura);
-    cout << "\nPagamento realizado com sucesso!\n";
- 
-    cout << "Fatura restante: R$ " << cartao->getFatura() << endl;
+    cartao->pagarFaturaAtual(pagamento);    
     confirmar();
 }
 

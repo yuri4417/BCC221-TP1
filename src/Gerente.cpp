@@ -1,25 +1,45 @@
 #include <iostream>
 #include <vector>
 #include "utils.h"
+#include "cores.h"
 #include "Gerente.h"
 #include "Pessoa.h"
 #include "Cliente.h"
-#include "menu.h"
+#include "Banco.h"
 using namespace std;
 
+// Construtor de gerente, primeiro chamando o construtor da classe base e depois setando o ID do gerente
 Gerente::Gerente(string n, string l, string s, string d, string t, size_t id):
-    Pessoa(n, l, s, d, t) { ID = id;}
+    Pessoa(n, l, s, d, t) { setID(id);}
     
-Gerente::~Gerente() {}
-
-void Gerente::setCliente(Cliente* c) {
-    clientes.push_back(c);
+// Getters
+size_t Gerente::getID() const{
+    return ID;
 }
- 
 const vector<Cliente*> Gerente::getClientes() const{
     return clientes;
 }
 
+//Setters
+bool Gerente::setCliente(Cliente* c) {
+    for (auto clienteExistente : clientes) {
+        if (clienteExistente->getID() == c->getID()) {
+            cout << endl << endl; 
+            cout << "Cliente: " << (c->getNome()) << " | "<<"Id: " << c->getID() <<
+            " "<< "Já está associado ao gerente: " << getID() << endl; 
+            cout << endl << endl;
+            confirmar("Pressione ENTER para retornar ao menu...");
+            return false;
+        }
+    }
+    clientes.push_back(c);
+    return true;
+}
+void Gerente::setID(size_t id){
+    ID = id;
+}
+
+// Método para exibir os dados do gerente, incluindo os clientes relacionados e os dados privados
 void Gerente::exibirDados() {
     cout << "===== Dados do Gerente =====" << endl;
     cout << "Nome: " << getNome() << endl;
@@ -36,13 +56,17 @@ void Gerente::exibirDados() {
     cout << "============================" << endl;
 }
 
-size_t Gerente::getID() const{
-    return ID;
-}
-void Gerente::setID(size_t id){
-    ID = id;
+// Método para remover um cliente da lista de clientes relacionados ao gerente, utilizando o ID do cliente
+void Gerente::removeCliente(size_t idCliente){
+    for(auto it = clientes.begin(); it != clientes.end(); ++it){
+        if((*it)->getID() == idCliente){
+            clientes.erase(it);
+            return;
+        }
+    }
 }
 
+// Método para realizar o cadastro de um gerente, solicitando os dados necessários e validando as entradas
 bool Gerente::cadastro(){
     clearTerminal();
     cout << BOLD(GREEN(" ===== Iniciando Cadastro de Gerente =====")) << endl;
@@ -70,11 +94,11 @@ bool Gerente::cadastro(){
     return true;
 }
 
-ostream& operator<<( std :: ostream& out , const Gerente& g) {//Sobrecarga
+// Sobrecarga do operador << para exibir os dados do gerente de forma formatada
+ostream& operator<<( std :: ostream& out , const Gerente& g) {
     cout << "ID: "<< g.getID()  << " | Nome:" << g.getNome() << endl;
     return out;
 }
-// istream& operator >>( std :: istream& in, Cliente& c){//Sobrecarga
-//     in >> c.remuneracao >> c.tipoDeConta >> c.taxaDeRendimento >> c.saldo;
-//     return in;
-// }
+
+//Destrutor 
+Gerente::~Gerente() {}

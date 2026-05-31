@@ -2,16 +2,14 @@
 #include <iostream>
 using namespace std;
 
-//----------------------------------------------------
-//Construtor
 
+//Construtor setando o nome, login, senha, data de nascimento e trabalho da pessoa
 Pessoa::Pessoa(string n, string l, string s, string d, string t) {
     setNome(n); setLogin(l); setSenha(s); setDataNasc(d); setTrabalho(t);
 }
 
-//------------------------------------------------------
-//Setters
 
+//Setters
 void Pessoa::setNome(string n) {
     nome = n;
 }
@@ -29,7 +27,6 @@ void Pessoa::setDataNasc(string d) {
     dataNasc = d;
 }
 
-//------------------------------------------------------
 //Getters
 string Pessoa::getNome() const     { 
     return nome; 
@@ -47,4 +44,5 @@ string Pessoa::getDataNasc() const {
     return dataNasc; 
 }
 
+//Destrutor
 Pessoa::~Pessoa(){}
