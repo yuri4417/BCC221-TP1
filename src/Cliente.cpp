@@ -146,8 +146,15 @@ bool Cliente::cadastro() {
     
 
     if (tipoConta == 2) 
-        if (!lerEntrada(taxa, BOLD("Digite a taxa (%) de rendimento da conta poupança"), ": "))
-            return false;
+    {
+        if(salario < 10000)
+            taxa = 5; // rende 5%
+        else if(salario < 50000)
+            taxa = 7; // rende 7%
+        else
+            taxa = 10; // rende 10%
+        cout << BOLD(WHITE("Taxa de rendimento do cliente: ")) << nome << " = " <<  taxa<< "%" << endl;
+    }
     
     if (!lerEntrada(login, BOLD("Digite o login do cliente"), ": "))
         return false;
@@ -191,7 +198,7 @@ void Cliente::rendimento()
 {
     if(tipoDeConta == "Poupanca")
     {
-        saldo += saldo * (taxaDeRendimento /100);
+        saldo += saldo * (taxaDeRendimento /100.0);
         return;
     }
 }
