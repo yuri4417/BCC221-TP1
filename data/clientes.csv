@@ -1,5 +1,6 @@
 nome,login,senha,dataNasc,trabalho,ID,gerenteID,remuneracao,tipoConta,taxaRendimento,saldo,cartao
 Otavio,otavio67,2007,18/03/2007,Ex-militar,1,1,10500,Poupanca,5,30000,{}
-Pedro,pedroPescador,peixes,30/08/1982,Pescador,2,2,1000,Corrente,0,30000,{3991441909;pedro;600;0;600;[0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0]}
-Miguel,miguel,22052007,22/05/2007,Estudante,3,2,54630,Poupanca,10,40000,{3991723330;miguel;32778;0;26111.3;[3333.33:3333.33:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0]}
+Pedro,pedroPescador,peixes,30/08/1982,Pescador,2,2,1000,Corrente,0,30000,{4267129914419095;pedro;600;0;600;[0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0]}
+Miguel,miguel,22052007,22/05/2007,Estudante,3,2,54630,Poupanca,10,40000,{4267129917233303;miguel;32778;0;26111.3;[3333.33:3333.33:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0]}
 Marcos,papaleguas,1,29/03/2006,estudante,4,2,1680,Poupanca,5,0,{}
+kaka,1,1,1,1,5,1,1,Corrente,0,100,{4267120000000055;1;0.6;0;0.6;[0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0]}

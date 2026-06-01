@@ -967,12 +967,13 @@ void Banco::criarCartao() {
 
     //limite inicial eh igual a 60% da renda do cliente
     double limite = 0.6 * ptrCliente->getRemuneracao();
-    cout << BOLD(GREEN("Limite inicial de R$ ")) << printDinheiro(limite);
+    cout << BOLD(GREEN("Limite inicial de R$ ")) << printDinheiro(limite) << "\n";
 
     //senha para o cartao
     std::string senha;
-    if (!lerEntrada(senha, "Digite a senha para o cartão", ":"))
+    if (!lerEntrada(senha, "Digite a senha para o cartão", ":")){
         return;
+    }
 
 
     //exige senha do gerente para confirmacao do processo 
@@ -1030,14 +1031,24 @@ void Banco::alterarStatusCartao(bool bloquear) {
         return;
     }
 
+    // Busca o gerente associado ao cliente
+    Gerente *gerente = pesquisaID(vecGerente, ptrCliente->getGerenteAssociadoID());
+
     // verifica a senha (padronizado com loop para ambas as acoes)
     string senha;
     while (true) {
-        if (!lerEntrada(senha, "Digite a senha do Cartão", ": "))
+        if (!lerEntrada(senha, "Digite a senha do Cartão (Caso for o Gerente, digite a senha do gerente)", ": "))
             return;
         
-        if (senha == cartao->getSenha()) 
+        if (senha == cartao->getSenha()){
+            cout << "Operação autorizada pelo cliente.\n";
             break;
+        }
+                    
+        if(gerente && senha == gerente->getSenha()) {
+            cout << "Operação autorizada pelo gerente associado ao cliente.\n";
+            break;
+        }
         
         cout << "Senha incorreta!\n";
     }
@@ -1262,4 +1273,13 @@ void Banco::pagarFatura() {
     confirmar();
 }
 
-Banco::~Banco(){}   
+Banco::~Banco(){
+    for (auto transacao : vecTransacao)
+        delete transacao;
+
+    for (auto gerente : vecGerente)
+        delete gerente;
+
+    for (auto cliente : vecCliente)
+        delete cliente;
+}   

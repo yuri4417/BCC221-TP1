@@ -75,6 +75,8 @@ void Cliente :: setRemuneracao(double r) {
 }
 
 void Cliente :: setCartao(CartaoCredito* c) {
+    if (cartao != nullptr)
+        delete cartao;
     cartao = c; 
 }
 
@@ -210,4 +212,6 @@ ostream& operator <<( std :: ostream& out , const Cliente& c){//Sobrecarga
 }
 
 // Destrutor
-Cliente::~Cliente() {}
+Cliente::~Cliente() {
+    delete cartao;
+}
