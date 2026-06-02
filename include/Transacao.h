@@ -16,6 +16,9 @@ class Transacao{
 public:
     //Construtor
     Transacao(int t = -1, double v = 0.0, std::string d= "", std::string h = "");
+    //Destrutor
+    virtual ~Transacao();
+
     
     //getters
     int getTipo() const; 
@@ -38,8 +41,7 @@ public:
     void pushClienteEnvolvido(Cliente* cli);
     bool acao(Cliente* cliente, double valor);
     bool acao(std::vector<Cliente*> b, double valor);
+    bool transferenciaCredito(std::vector<Cliente*> clientes, double valor);
 
-    //Destrutor
-    virtual ~Transacao();
 };
 #endif

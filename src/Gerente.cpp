@@ -11,7 +11,10 @@ using namespace std;
 // Construtor de gerente, primeiro chamando o construtor da classe base e depois setando o ID do gerente
 Gerente::Gerente(string n, string l, string s, string d, string t, size_t id):
     Pessoa(n, l, s, d, t) { setID(id);}
-    
+
+//Destrutor 
+Gerente::~Gerente() {}
+
 // Getters
 size_t Gerente::getID() const{
     return ID;
@@ -25,10 +28,9 @@ bool Gerente::setCliente(Cliente* c) {
     for (auto clienteExistente : clientes) {
         if (clienteExistente->getID() == c->getID()) {
             cout << endl << endl; 
-            cout << "Cliente: " << (c->getNome()) << " | "<<"Id: " << c->getID() <<
-            " "<< "Já está associado ao gerente: " << getID() << endl; 
-            cout << endl << endl;
-            confirmar("Pressione ENTER para retornar ao menu...");
+            cout << BOLD("Cliente: " + c->getNome() + " | " + "Id: " + to_string(c->getID())) <<
+            BOLD(YELLOW(" Já está associado ao gerente: " + to_string(getID())))  << endl; 
+            confirmar(BOLD(GREEN("Pressione ENTER para retornar ao menu...")));
             return false;
         }
     }
@@ -41,21 +43,20 @@ void Gerente::setID(size_t id){
 
 // Método para exibir os dados do gerente, incluindo os clientes relacionados e os dados privados
 void Gerente::exibirDados() {
-    cout << "===== Dados do Gerente =====" << endl;
-    cout << "Nome: " << getNome() << endl;
-    cout << "ID: " << getID() << endl;
-    cout << "Trabalho: " << getTrabalho() << endl;
-    cout << "Qtd de clientes relacionados: " << getClientes().size() << endl;
-    cout << "Clientes relacionados: " << endl;
-    for (const auto& cliente : getClientes()) {
-        cout << " - " << cliente->getNome() << " (ID: " << cliente->getID() << ")" << endl;
-    }
-    cout << "Dados Privados do Gerente:" << endl;
-    cout << "Login: " << getLogin() << endl;
-    cout << "Senha: " << getSenha() << endl;
-    cout << "============================" << endl;
+    cout << BOLD(GREEN("======= Dados do Gerente =======")) << endl;
+    cout << BOLD("Nome: ") << getNome() << endl;
+    cout << BOLD(YELLOW("ID: ")) << getID() << endl;
+    cout << BOLD("Trabalho: ") << getTrabalho() << endl;
+    cout << BOLD(GREEN("Qtd de clientes relacionados: ")) << getClientes().size() << endl;
+    cout << BOLD("Clientes relacionados: ") << endl;
+    for (const auto& cliente : getClientes()) 
+        cout << BOLD(" - " + cliente->getNome() + " (ID: " + to_string(cliente->getID()) + ")");
+    cout << BOLD(RED("\n===============================")) << endl;
+    cout << BOLD(RED("Dados Privados do Gerente:")) << endl;
+    cout << BOLD("Login: ") << getLogin() << endl;
+    cout << BOLD("Senha: ") << getSenha() << endl;
+    cout << BOLD(RED("===============================")) << endl;
 }
-
 // Método para remover um cliente da lista de clientes relacionados ao gerente, utilizando o ID do cliente
 void Gerente::removeCliente(size_t idCliente){
     for(auto it = clientes.begin(); it != clientes.end(); ++it){
@@ -65,7 +66,6 @@ void Gerente::removeCliente(size_t idCliente){
         }
     }
 }
-
 // Método para realizar o cadastro de um gerente, solicitando os dados necessários e validando as entradas
 bool Gerente::cadastro(){
     clearTerminal();
@@ -96,9 +96,7 @@ bool Gerente::cadastro(){
 
 // Sobrecarga do operador << para exibir os dados do gerente de forma formatada
 ostream& operator<<( std :: ostream& out , const Gerente& g) {
-    cout << "ID: "<< g.getID()  << " | Nome:" << g.getNome() << endl;
+    cout << BOLD("ID: " + to_string(g.getID()) + " | Nome: " + g.getNome()) << endl; 
     return out;
 }
 
-//Destrutor 
-Gerente::~Gerente() {}

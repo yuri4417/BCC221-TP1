@@ -7,25 +7,8 @@ using namespace std;
 Pessoa::Pessoa(string n, string l, string s, string d, string t) {
     setNome(n); setLogin(l); setSenha(s); setDataNasc(d); setTrabalho(t);
 }
-
-
-//Setters
-void Pessoa::setNome(string n) {
-    nome = n;
-}
-void Pessoa::setTrabalho(string t){
-    trabalho = t;
-}
-void Pessoa::setLogin(string l) {
-    login = l;
-}
-void Pessoa::setSenha(string s) {
-    senha = s;
-}
-
-void Pessoa::setDataNasc(string d) {
-    dataNasc = d;
-}
+//Destrutor
+Pessoa::~Pessoa(){}
 
 //Getters
 string Pessoa::getNome() const     { 
@@ -44,5 +27,20 @@ string Pessoa::getDataNasc() const {
     return dataNasc; 
 }
 
-//Destrutor
-Pessoa::~Pessoa(){}
+//Setters
+void Pessoa::setNome(string n) {
+    nome = n;
+}
+void Pessoa::setTrabalho(string t){
+    trabalho = t;
+}
+void Pessoa::setLogin(string l) {
+    login = l;
+}
+void Pessoa::setSenha(string s) {
+    senha = s;
+}
+
+void Pessoa::setDataNasc(string d) {
+    dataNasc = d;
+}

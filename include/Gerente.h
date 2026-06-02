@@ -13,25 +13,24 @@ class Gerente : public Pessoa {
 public:
     // Construtor
     Gerente(std::string n="", std::string l="", std::string s="", std::string d="", std::string t="", size_t id=__INT_MAX__);
-    
-    // Getters
-    const std::vector<Cliente*> getClientes() const;
-    size_t getID() const;
-    void setID(size_t);
+    //Destrutor
+    virtual ~Gerente();
 
+    // Getters
+    size_t getID() const;
+    const std::vector<Cliente*> getClientes() const;
+    
     // Setters
     bool setCliente(Cliente*);
-    void exibirDados() override;
+    void setID(size_t);
     
     // Métodos de gerenciamento de clientes
+    void exibirDados() override;
     void removeCliente(size_t idCliente);
     virtual bool cadastro();   
     
     // Sobrecarga do operador << para exibir os dados do gerente
     friend std::ostream& operator << (std::ostream&, const Gerente&);
-
-    //Destrutor
-    virtual ~Gerente();
 };
 
 

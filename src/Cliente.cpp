@@ -19,6 +19,12 @@ Cliente::Cliente(string nome, string login, string senha, string dataNasc, strin
     setTransacao(transacoes);
     setCartao(cartao); 
     }
+// Destrutor
+Cliente::~Cliente() {
+    delete cartao;
+}
+
+
 
 //getters
 size_t Cliente :: getID() const{
@@ -82,37 +88,37 @@ void Cliente :: setCartao(CartaoCredito* c) {
 
 // Metodo para exibir os dados do cliente, incluindo informações pessoais, detalhes da conta e status do cartão de crédito
 void Cliente::exibirDados() {
-    cout<< "======= Dados do Cliente =======" << endl;
-    cout << "Nome: " << getNome()  << endl;
-    cout << "ID: " << getID() << endl;
-    cout << "Remuneração: " << getRemuneracao() << endl;
-    cout << "Tipo de conta: " << getTipoDeConta() << endl;
-    cout << "Taxa de rendimento: " << getRendimento() << endl;
-    cout << "Saldo: " << getSaldo() << endl;
-    cout << "Gerente Associado ID: " << getGerenteAssociadoID() << endl;
-    cout << "Cartão de Crédito: ";
+    cout<< BOLD(GREEN("======= Dados do Cliente =======")) << endl;
+    cout << BOLD("Nome: ") << getNome()  << endl;
+    cout << BOLD(YELLOW("ID: ")) << getID() << endl;
+    cout << BOLD(GREEN("Remuneração: ")) << printDinheiro(getRemuneracao()) << endl;
+    cout << BOLD("Tipo de conta: ") << getTipoDeConta() << endl;
+    cout << BOLD("Taxa de rendimento: ") << getRendimento() << endl;
+    cout << BOLD("Saldo: ") << getSaldo() << endl;
+    cout << BOLD(BLUE("Gerente Associado ID: ")) << getGerenteAssociadoID() << endl;
+    cout << BOLD("Cartão de Crédito: ");
     CartaoCredito* cc = getCartao();
     if(cc == nullptr)
-        cout << "Cliente não possui cartão de crédito" << endl;
+        cout << BOLD(RED("Cliente não possui cartão de crédito")) << endl;
     else{
-        cout << cc->getNumero();
+        cout << BOLD(to_string(cc->getNumero()));
         if(cc->getBloqueado() == false)
-            cout << " (Ativo)" << endl;
+            cout << BOLD(GREEN(" (Ativo)")) << endl;
         else
-            cout << " (Inativo)" << endl;
+            cout << BOLD(RED(" (Inativo)")) << endl;
         cout << endl;
     }
-    cout << "===============================" << endl;
-    cout << "Dados Privados do Cliente:" << endl;
-    cout << "Login: " << getLogin() << endl;
-    cout << "Senha: " << getSenha() << endl;
-    cout << "===============================" << endl;
+    cout << BOLD(RED("===============================")) << endl;
+    cout << BOLD(RED("Dados Privados do Cliente:")) << endl;
+    cout << BOLD("Login: ") << getLogin() << endl;
+    cout << BOLD("Senha: ") << getSenha() << endl;
+    cout << BOLD(RED("===============================")) << endl;
 }
 
 // Metodo para realizar o cadastro de um cliente, solicitando informações ao usuário e validando as entradas
 bool Cliente::cadastro() {
     clearTerminal();
-    cout << " ===== Iniciando Cadastro de Cliente =====" << endl;
+    cout << BOLD(GREEN(" ===== Iniciando Cadastro de Cliente =====")) << endl;
     string nome;
     string dataNasc;
     string profissao;
@@ -125,37 +131,33 @@ bool Cliente::cadastro() {
 
     if (!lerEntrada(nome, BOLD("Digite o nome do cliente"), ": "))
         return false;
-
     if (!lerEntrada(dataNasc, BOLD("Digite a data de nascimento do cliente (dd/mm/aaaa)"), ": "))
         return false;
-
     if (!lerEntrada(profissao, BOLD("Digite a profissão do cliente"), ": "))
         return false;
-
-    if (!lerEntrada(salario, BOLD("Digite o salario do cliente"), ": "))
+    if (!lerEntrada(salario, BOLD("Digite o salário do cliente"), ": "))
         return false;
 
-    cout << "Escolha uma modalidade de conta: " << endl;
-    cout << "1. Conta Corrente" << endl;
-    cout << "2. Conta Poupança" << endl;
+    cout << BOLD(GREEN("Escolha uma modalidade de conta: ")) << endl;
+    cout << BOLD("1. Conta Corrente") << endl;
+    cout << BOLD("2. Conta Poupança") << endl;
     while (1) {
         if (!lerEntrada(tipoConta, BOLD("Escolha uma opção"), ": "))
             return false;
         if (tipoConta >= 1 && tipoConta <= 2)
             break;
-        cout << BOLD(RED("Opcao invalida. Tente novamente: "));
+        cout << BOLD(RED("Opcao inválida. Tente novamente: "));
     }
     
 
-    if (tipoConta == 2) 
-    {
+    if (tipoConta == 2) {
         if(salario < 10000)
             taxa = 5; // rende 5%
         else if(salario < 50000)
             taxa = 7; // rende 7%
         else
             taxa = 10; // rende 10%
-        cout << BOLD(WHITE("Taxa de rendimento do cliente: ")) << nome << " = " <<  taxa<< "%" << endl;
+        cout << BOLD(WHITE("Taxa de rendimento do cliente: " + nome + " = " + to_string(taxa) + "%")) << endl;
     }
     
     if (!lerEntrada(login, BOLD("Digite o login do cliente"), ": "))
@@ -207,11 +209,7 @@ void Cliente::rendimento()
 
 // Sobrecarga do operador << para exibir as informações do cliente de forma formatada
 ostream& operator <<( std :: ostream& out , const Cliente& c){//Sobrecarga
-    cout << "ID: "<< c.getID()  << " | Nome:" << c.getNome() << endl;
+    cout << BOLD("ID: " + to_string(c.getID()) + " | Nome: " + c.getNome()) << endl; 
     return out;
 }
 
-// Destrutor
-Cliente::~Cliente() {
-    delete cartao;
-}

@@ -11,13 +11,6 @@ using namespace std;
 void clearTerminal() {
     cout << "\033[H\033[2J"; 
 }
-
-// Limpa o buffer de entrada para evitar problemas com entradas anteriores
-// void limpar_buffer() {
-//     int ch;
-//     while ((ch = getchar()) != '\n' && ch != EOF);
-// }
-
 // Pergunta ao usuário uma resposta sim ou não, retornando 1 para sim e 0 para não
 int perguntaSN(string str) {
     string resp;
@@ -29,7 +22,7 @@ int perguntaSN(string str) {
             if (opt == 's') return 1;
             if (opt == 'n') return 0;
         }
-        cout << "Opção Inválida! Tente novamente (Responda com S/N)\n";
+        cout << BOLD(RED("Opção Inválida! Tente novamente (Responda com S/N)"));
     }
 }
 
@@ -43,5 +36,5 @@ void confirmar(string mensagem) {
 string printDinheiro(double valor) {
     ostringstream oss;
     oss << fixed << setprecision(2) << valor;
-    return BOLD(GREEN("R$ " + oss.str()));
+    return BOLD(GREEN("" + oss.str()));
 }

@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "Cliente.h"
+#include "utils.h"
 #include "Gerente.h"
 using namespace std;
 
@@ -13,31 +14,30 @@ class Banco {
     vector <Gerente*> vecGerente;
     vector <Transacao*> vecTransacao;
 
+
+    bool verificaSenha(const std::string& senhaCorreta, const std::string& prompt);
 public:
+
     Banco(int qtdC = 0, int qtdG = 0);
+    virtual ~Banco();
     void run();
     void cadastrarCliente();
     void cadastrarGerente();
-    void associarGerenteCliente();
-    void imprimirOpcoes();
     void criarTransacao();
     void exibirExtrato();
+    void associarGerenteCliente();
     void listarClientes();
     void listarGerentes();
+    void listarCartao();
     void carregaDados();
     void salvaDados();
-
-    
+    void cadernetaDePoupanca();
     void cartaoCredito();
     void criarCartao();
-    void listarCartao();
     void alterarStatusCartao(bool bloquear);
-    void bloquear();
-    void desbloquear();
     void alterarLimite();
     void pagamentoParcelado();
     void pagarFatura();
-    void cadernetaDePoupanca();
 
     template<typename T>
     void showVector(vector<T*>& vec, string msg) {
@@ -55,14 +55,19 @@ public:
         return nullptr;
     }
 
-
-    int getQtdCliente() const;
-    int getQtdGerente() const;
-    void setQtdCliente(int);
-    void setQtdGerente(int);
-
-    friend Cliente* pesquisaIDCliente(size_t);
-    ~Banco();
+    template<typename T>
+    T* pesquisaPessoa(const std::vector<T*>& vec, const std::string& prompt) {
+        size_t id;
+        T* ptr = nullptr;
+        while (true) {
+            if (!lerEntrada(id, prompt, ": ")) 
+                return nullptr;
+            ptr = pesquisaID(vec, id);
+            if (ptr) 
+                return ptr;
+            std::cout << BOLD(RED("ID não encontrado. Tente novamente.\n"));
+        }
+    }
 };
 
 #endif

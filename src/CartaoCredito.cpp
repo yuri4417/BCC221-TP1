@@ -18,6 +18,9 @@ CartaoCredito::CartaoCredito(unsigned long long numero, std::string senha, doubl
     faturas = fatura;
     faturas.resize(MAXPARCELAS, 0.0);
 }
+//Destrutor
+CartaoCredito::~CartaoCredito() {}
+
 
 //Getters
 unsigned long long CartaoCredito::getNumero() const{
@@ -47,7 +50,7 @@ double CartaoCredito::getFatura(int idx) const{
 
 //Setters
 void CartaoCredito::setNumero(unsigned long long n){
-    numero = gerarNumeroCartao(n);
+    numero = n;
 }
 void CartaoCredito::setSenha(std::string s){
     senha = s;
@@ -70,31 +73,12 @@ void CartaoCredito::setDisponivel(double d){
     disponivel = d;
 }
 
-//Funções de operação de bloquear e desbloquear o cartao
-void CartaoCredito::bloquear(){
-    setBloqueado(true);
-}
-void CartaoCredito::desbloquear(){
-    setBloqueado(false);
-}
-
-//Função para realizar uma compra, verifica se o cartão está bloqueado e se o valor da compra não ultrapassa o limite disponível, caso contrário, a compra é negada
-// bool CartaoCredito::realizarCompra(double valor) {
-//     if(bloqueado)
-//         return false;
-    
-//     if(valor > disponivel)
-//         return false;
-
-//     return true;
-// }
-
 //Função para pagar a fatura, reduz o valor da fatura atual pelo valor pago
 void CartaoCredito::pagarFaturaAtual(double valor) {
-    cout << BOLD(GREEN("\nPagamento realizado com sucesso!\n"));
+    cout << BOLD(GREEN("Pagamento realizado com sucesso!\n"));
     if(valor > faturas[0]){
         valor = faturas[0];
-        cout << BOLD(GREEN("Valor limitado a R$ ")) << printDinheiro(faturas[0]);
+        cout << BOLD("Valor limitado a ") << printDinheiro(faturas[0]);
     }
     faturas[0] -= valor;
     disponivel += valor;
@@ -102,10 +86,10 @@ void CartaoCredito::pagarFaturaAtual(double valor) {
         for(int i = 0; i < MAXPARCELAS - 1; i++)
             faturas[i] = faturas[i + 1];
         faturas[MAXPARCELAS - 1] = 0;
-        cout << BOLD(GREEN("Sua próxima fatura é de R$ ")) << printDinheiro(faturas[0]);
+        cout << BOLD("Sua próxima fatura é de ") << printDinheiro(faturas[0]);
     }
     else
-        cout << BOLD(GREEN("O valor restante da fatura é R$ ")) << printDinheiro(faturas[0]);
+        cout << BOLD("O valor restante da fatura é ") << printDinheiro(faturas[0]);
 }
 
 void CartaoCredito::insereFaturas(double valor, int parcelas){
@@ -169,14 +153,13 @@ unsigned long long CartaoCredito::gerarNumeroCartao(size_t id) {
 
 //Sobrecarga do operador << para facilitar a exibição dos dados do cartão de crédito
 ostream& operator <<( std :: ostream& out , const CartaoCredito& c){
-    out << "| Numero: "<< c.getNumero() << endl;
-    out << "| Senha: " << c.getSenha() << endl;
-    out << "| Limite: " << c.getLimite() << endl;
-    out << "| Fatura Atual: " << c.getFatura() << endl;
-    out << "| Bloqueado: " << (c.getBloqueado()? "Sim" : "Não") << endl;
-    out << "| Disponivel: " << c.getDisponivel() << endl;
+    out << BOLD("| Numero: ") << c.getNumero() << endl;
+    out << BOLD("| Senha: ")  << c.getSenha() << endl;
+    out << BOLD("| Limite: ") << printDinheiro(c.getLimite()) << endl;
+    out << BOLD("| Fatura Atual: ") << c.getFatura() << endl;
+    out << BOLD("| Bloqueado: ") << (c.getBloqueado()? BOLD(RED("Sim")) : BOLD(GREEN("Não"))) << endl;
+    out << BOLD("| Disponivel: ") << printDinheiro(c.getDisponivel()) << endl;
     return out;
 }
 
-//Destrutor
-CartaoCredito::~CartaoCredito() {}
+
