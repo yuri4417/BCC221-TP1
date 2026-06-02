@@ -36,5 +36,5 @@ void confirmar(string mensagem) {
 string printDinheiro(double valor) {
     ostringstream oss;
     oss << fixed << setprecision(2) << valor;
-    return BOLD(GREEN("" + oss.str()));
+    return BOLD(GREEN("R$ " + oss.str()));
 }

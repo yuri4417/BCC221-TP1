@@ -7,18 +7,18 @@ using namespace std;
 
 // Construtor de cliente, primeiro chamando o construtor da classe base, depois inicializando os atributos específicos de Cliente 
 Cliente::Cliente(string nome, string login, string senha, string dataNasc, string trabalho,size_t ID,
-                size_t gerenteAssociadoID, double remuneracao, string tipoConta, double taxaRendimento,
-                double saldo, const vector<Transacao*>& transacoes,CartaoCredito* cartao):
-    Pessoa(nome, login, senha, dataNasc, trabalho) {
-    setID(ID);
-    setGerenteAssociadoID(gerenteAssociadoID);
-    setRemuneracao(remuneracao);
-    setTipoDeConta(tipoConta);
-    setRendimento(taxaRendimento);
-    setSaldo(saldo);
-    setTransacao(transacoes);
-    setCartao(cartao); 
-    }
+                 size_t gerenteAssociadoID, double remuneracao, string tipoConta, double taxaRendimento,
+                 double saldo, const vector<Transacao*>& transacoes,CartaoCredito* cartao):
+                 Pessoa(nome, login, senha, dataNasc, trabalho), cartao(nullptr) {
+                     setID(ID);
+                     setGerenteAssociadoID(gerenteAssociadoID);
+                     setRemuneracao(remuneracao);
+                     setTipoDeConta(tipoConta);
+                     setRendimento(taxaRendimento);
+                     setSaldo(saldo);
+                     setTransacao(transacoes);
+                     setCartao(cartao);
+                 }
 // Destrutor
 Cliente::~Cliente() {
     delete cartao;

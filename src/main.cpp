@@ -1,12 +1,25 @@
 #include <iostream>
-#include <filesystem>
 using namespace std;
 #include "Banco.h"
  
+#ifdef _WIN32
+#include <direct.h>
+#else
+#include <sys/stat.h>
+#include <sys/types.h>
+#endif
+
+void criarPasta() {
+#ifdef _WIN32
+    _mkdir("data");
+#else
+    mkdir("data", 0755);
+#endif
+}
+
+
 int main() {
-    // verificacao da pasta de dados
-    if (!filesystem::exists("./data/"))
-        filesystem::create_directory("./data/");
+    criarPasta();
     // Criação do objeto Banco e execução do menu
     Banco banco;
     banco.run();
