@@ -7,7 +7,7 @@
 
 class CartaoCredito {
     // Atributos privados
-    size_t numero;
+    unsigned long long numero;
     std::string senha;
     double limite;
     std::vector<double> faturas;
